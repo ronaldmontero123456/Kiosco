@@ -1,0 +1,85 @@
+﻿@page "/ActualizarDatosPersonales"
+
+<header class="page-header">
+
+    <h2>Actualizar Datos Personales</h2>
+    <!-- Breadcrumb-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Datos Personales</a></li>
+        <li class="breadcrumb-item active"> Actualizar Datos</li>
+    </ol>
+</header>
+
+<section class="Representante crear">
+    <div class="container-fluid">
+    </div>
+        <form method="post" enctype="multipart/form-data" asp-controller="FiltrosPermiso" asp-action="Crear" novalidate="novalidate">
+            <fieldset>
+                <legend>Datos Personales:</legend>
+                <div class="row">
+                
+
+                    <div class="col-md-4">
+                        <label asp-for="FiltroId" class="control-label">ID</label>
+                        <input asp-for="FiltroId" class="form-control" type="number" disabled>
+                    </div>
+
+                    <div class="col-md-4">
+                        <span asp-validation-for="Label" class="text-danger"></span>
+
+                    </div>
+@*
+                    <div class="col-md-4">
+                        <span asp-validation-for="Campo" class="text-danger"></span>
+
+                    </div>*@
+
+                    <div class="col-md-4">
+                        <label asp-for="FiltroId" class="control-label">Descripcion</label>
+                        <textarea type="text" class="form-control form-control-sm" @*@bind="globalSearchDTO.ContainerNos" @bind:event="oninput"*@ id="ContainerNos" required></textarea>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Tipo" class="control-label">Nombre</label>
+                        <select asp-for="Tipo" class="form-control" asp-items="ViewBag.Tipos"></select>
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Origen" class="control-label">Apellidos</label>
+                        <input asp-for="Origen" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrigenLabel" class="control-label">Cargo</label>
+                        <input asp-for="OrigenLabel" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrigenValue" class="control-label">Fecha de Nacimiento</label>
+                        <input asp-for="OrigenValue" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrigenValue" class="control-label">Salario</label>
+                        <input asp-for="OrigenValue" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="filOperadorDefecto" class="control-label">Operador</label>
+                        <select class="form-control">
+                            <option value="contains">Contiene</option>
+                            <option value="=">Es igual</option>
+                            <option value=">">Mayor que</option>
+                            <option value=">=">Mayor o igual que</option>
+                            <option value="<">Menor que</option>
+                            <option value="<=">Menor o igual que</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <a asp-action="Index" asp-controller="FiltrosPermiso" class="btn btn-danger btn-sm">Volver</a>
+            <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
+        </form>
+</section>
+
+@code {
+
+}

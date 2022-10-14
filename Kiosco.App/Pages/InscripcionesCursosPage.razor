@@ -1,0 +1,106 @@
+﻿@page "/Cursos/InscripcionesCursos/{CursoID}"
+
+@using Kiosco.App.Data
+@using Kiosco.App.Services
+@using System.Reflection
+@inject IDynamicFormsService DynamicFormsService;
+
+<header class="page-header">
+    <h2>Inscripciones Cursos</h2>
+    <!-- Breadcrumb-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Inscripciones Cursos</a></li>
+        <li class="breadcrumb-item active"> Inscripciones</li>
+    </ol>
+</header>
+
+<section class="Representante crear">
+    <div class="container-fluid">
+    </div>
+        <form enctype="multipart/form-data" asp-controller="FiltrosPermiso" asp-action="Crear" novalidate="novalidate">
+            <fieldset>
+                <legend>Adding Forms:</legend>
+@*                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div asp-validation-summary="ModelOnly"></div>
+                    </div>
+                }*@
+                <div class="row">
+                   
+                    @foreach (var templates in @DynamicsForms.Where(d => d.Modulo.Contains("InscripcionesCursos")).ToList())
+                    {
+                        @switch(templates.Tipo)
+                        {
+                            case "text":                            
+                                <div class="col-md-4">
+                                    <label asp-for="Origen" class="control-label">@templates.DisplayValue</label>
+                                    @*<input asp-for="Origen" class="form-control">*@                
+                                </div>
+                            break;
+                            case "number":
+                                <div class="col-md-4">
+                                    <label asp-for="Origen" class="control-label">@templates.DisplayValue</label>
+                                    <input asp-for="Origen" class="form-control">
+                                </div>
+                            break;
+                            case "list":
+                                <div class="col-md-4">
+                                    <label asp-for="filOperadorDefecto" class="control-label">@templates.DisplayValue</label>
+                                    <select class="form-control">
+                                         @foreach (var template in @templates.Valor.Split(','))
+                                         {
+                                              <option value=@template>@template</option>
+                                         }
+                                    </select>
+                                </div>
+                            break;
+                            case "date":
+                                <div class="col-md-4">
+                                    <label for="Date" class="control-label">@templates.DisplayValue</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                            break;
+                            case "check":
+
+                            break;
+                        }
+                    }
+                </div>
+            </fieldset>
+            <a asp-action="Index" asp-controller="FiltrosPermiso" class="btn btn-danger btn-sm">Back</a>
+            <button class="btn btn-primary btn-sm">Save</button>
+        </form>
+</section>
+@code {
+
+    
+    [Parameter]
+    public string CursoID { get; set; }
+
+    public static List<DynamicForms> DynamicsForms = new();
+    public InscripcionesCursos InscripcionesCurso = new();
+
+    private WebResponse<List<DynamicForms>> WebResponseItemDTO = new();
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+
+            WebResponseItemDTO = await DynamicFormsService.Get();
+
+            if (WebResponseItemDTO != null)
+                DynamicsForms = WebResponseItemDTO.body;
+
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error trying to get Web Response Item Report DTO");
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.InnerException);
+        }
+    }
+
+}

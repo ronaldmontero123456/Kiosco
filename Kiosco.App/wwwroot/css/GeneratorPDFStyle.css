@@ -1,0 +1,404 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+.contenedor-pdf{
+    
+    margin-top:4.5rem;
+}
+.header-container{
+    
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.h1 {
+    font-size: 2rem;
+}
+.img {
+    width: 10rem;
+    height: 8rem;
+}
+.img > img{
+    width:100%;
+    height:100%;
+}
+
+
+/*section number 1, 2 y 3*/
+.section-1, .section-2, .section-3, .section-5 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 10px;
+    margin-top: 2rem;
+}
+.section-1, .section-2, .section-3 {
+    border: 1px solid #000;
+    padding:1rem;
+}
+.section-1_column-1, .section-1_column-2, .section-1_column-3,
+.section-2_column-1, .section-2_column-2, .section-2_column-3,
+.section-3_column-1, .section-3_column-2, .section-3_column-3,
+.section-4_column-1, .section-4_column-2, .section-4_column-3, .section-4_column-4, .section-4_column-5,
+.section-5_column-1, .section-5_column-2 {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/*section number 4*/
+.section-4 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 2rem;
+    border:1px solid #000;
+}
+.section-4_column-1, .section-4_column-2, .section-4_column-3, .section-4_column-5 {
+    border: 1px solid #000;
+    margin-top:2rem;
+}
+.section-4_column-4 {
+    margin-top: 4rem;
+    border: 1px solid #000;
+}
+.box-1 {
+    width: 10px;
+    height: .5rem;
+    border: 1px solid #000;
+}
+.section-4 table tr > th{
+    text-align:center;
+}
+
+
+
+
+/*observacion*/
+.box-observacion {
+    width: 25rem;
+    height: 8rem;
+    border: 1px solid #000;
+    float: right;
+    display: flex;
+    align-items: center;
+    word-break: break-all;
+    margin: 0 0 1em 1em;
+    padding:.5rem;
+}
+.seacion-5_title{
+    padding-left:2rem;
+}
+/*row number six*/
+.section-6 {
+    display: flex;
+    margin-top: 4rem;
+}
+
+.section-6_column-1, .section-6_column-2 {
+    width: 50%;
+}
+.section-6_column-1 div > input{
+    width:25rem;
+    border:none;
+    border-bottom:3px solid #000;
+    text-align:center;
+    background:none;
+}
+.section-6_column-1 div > input:focus{
+    width:25rem;
+    border:none;
+    border-bottom:3px solid #000;
+    background:none;
+    text-align:center;
+    outline:none;
+}
+.section-6_column-2 div > input{
+    width:25rem;
+    border:none;
+    border-bottom:3px solid #000;
+    background:none;
+    text-align:center;
+
+
+}
+
+.section-6_column-2 div > input:focus{
+    width:25rem;
+    border:none;
+    border-bottom:3px solid #000;
+    background:none;
+    outline:none;
+    text-align:center;
+}
+
+
+
+/*row number seven*/
+.section-7 {
+    font-size:.8rem;
+    margin-top:2rem;
+}
+
+
+
+/*row number eight*/
+.section-8{
+    padding:1rem;
+}
+
+
+
+/*
+event PDF sticky*/
+
+.sticky {
+    position: fixed;
+    bottom: 120px;
+    right: 35px;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 5rem;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+  
+    
+}
+
+
+.sticky > button {
+    border: none;
+    padding: 0;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 3rem;
+    font-size: 2.5rem;
+    display: grid;
+    place-items: center;
+    color: #0096FF;
+    text-shadow:1px 2px 2px rgba(0,0,0,.2);
+    outline:none;
+    background:#fff;
+}
+
+
+.hideNoScroll{
+    display:none;
+}
+
+
+
+.btn-send-email{
+}
+.btn-send-email > button{
+    width:9rem;
+    font-size:1.2rem;
+    border-radius:.5rem;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+  
+}
+.bx-mail-send {
+    font-size: 2rem;
+    padding:0;
+}
+
+
+
+
+
+/*/Message email sent/*/
+
+.message-email-sent{
+    width:100%;
+    height:100vh;
+    background:rgba(0,0,0,.4);
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:999;
+    display:grid;
+    place-items:center;
+}
+
+
+.message-email-sent > .message{
+    width:40%;
+    height:40vh;
+    border-radius:.5rem;
+    background:#fff;
+}
+
+
+.message-email-sent .message div > .bx-mail-send{
+    font-size:4rem;
+    color:#0096FF;
+    text-shadow:1px 1px 1px rgba(0,0,0,.2);
+}
+
+
+.message-email-sent .message div > button{
+    width:12rem;
+    border-radius:.5rem;
+    border:none;
+    outline:none;
+    line-height:2;
+}
+.message-email-sent .message div > button:focus{
+    width:12rem;
+    border-radius:.5rem;
+    border:none;
+    outline:none;
+    line-height:2;
+
+}
+
+
+
+
+
+
+
+
+/* From uiverse.io by @mrhyddenn */
+
+.spinner {
+  font-size: 28px;
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+
+.spinner.center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.spinner .spinner-blade {
+  position: absolute;
+  left: 0.4629em;
+  bottom: 0;
+  width: 0.074em;
+  height: 0.2777em;
+  border-radius: 0.0555em;
+  background-color: transparent;
+  -webkit-transform-origin: center -0.2222em;
+  -ms-transform-origin: center -0.2222em;
+  transform-origin: center -0.2222em;
+  animation: spinner-fade9234 1s infinite linear;
+}
+
+.spinner .spinner-blade:nth-child(1) {
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.spinner .spinner-blade:nth-child(2) {
+  -webkit-animation-delay: 0.083s;
+  animation-delay: 0.083s;
+  -webkit-transform: rotate(30deg);
+  -ms-transform: rotate(30deg);
+  transform: rotate(30deg);
+}
+
+.spinner .spinner-blade:nth-child(3) {
+  -webkit-animation-delay: 0.166s;
+  animation-delay: 0.166s;
+  -webkit-transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  transform: rotate(60deg);
+}
+
+.spinner .spinner-blade:nth-child(4) {
+  -webkit-animation-delay: 0.249s;
+  animation-delay: 0.249s;
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.spinner .spinner-blade:nth-child(5) {
+  -webkit-animation-delay: 0.332s;
+  animation-delay: 0.332s;
+  -webkit-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg);
+}
+
+.spinner .spinner-blade:nth-child(6) {
+  -webkit-animation-delay: 0.415s;
+  animation-delay: 0.415s;
+  -webkit-transform: rotate(150deg);
+  -ms-transform: rotate(150deg);
+  transform: rotate(150deg);
+}
+
+.spinner .spinner-blade:nth-child(7) {
+  -webkit-animation-delay: 0.498s;
+  animation-delay: 0.498s;
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.spinner .spinner-blade:nth-child(8) {
+  -webkit-animation-delay: 0.581s;
+  animation-delay: 0.581s;
+  -webkit-transform: rotate(210deg);
+  -ms-transform: rotate(210deg);
+  transform: rotate(210deg);
+}
+
+.spinner .spinner-blade:nth-child(9) {
+  -webkit-animation-delay: 0.664s;
+  animation-delay: 0.664s;
+  -webkit-transform: rotate(240deg);
+  -ms-transform: rotate(240deg);
+  transform: rotate(240deg);
+}
+
+.spinner .spinner-blade:nth-child(10) {
+  -webkit-animation-delay: 0.747s;
+  animation-delay: 0.747s;
+  -webkit-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+
+.spinner .spinner-blade:nth-child(11) {
+  -webkit-animation-delay: 0.83s;
+  animation-delay: 0.83s;
+  -webkit-transform: rotate(300deg);
+  -ms-transform: rotate(300deg);
+  transform: rotate(300deg);
+}
+
+.spinner .spinner-blade:nth-child(12) {
+  -webkit-animation-delay: 0.913s;
+  animation-delay: 0.913s;
+  -webkit-transform: rotate(330deg);
+  -ms-transform: rotate(330deg);
+  transform: rotate(330deg);
+}
+
+@keyframes spinner-fade9234 {
+  0% {
+    background-color: #69717d;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+
+

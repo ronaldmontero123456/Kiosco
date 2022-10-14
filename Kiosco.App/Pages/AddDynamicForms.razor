@@ -1,0 +1,163 @@
+﻿@page "/DynamicForms/AddDynamicForms/{FormID}"
+@using Kiosco.App.Data
+@using Kiosco.App.Services
+@using System.Reflection
+@inject IDynamicFormsService DynamicFormsService;
+
+<header class="page-header">
+    <h2>Add Forms Dynamic</h2>
+    <!-- Breadcrumb-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Add Forms Dynamic</a></li>
+        <li class="breadcrumb-item active"> Add Forms</li>
+    </ol>
+</header>
+
+<section class="Representante crear">
+    <div class="container-fluid">
+    </div>
+        <form enctype="multipart/form-data" asp-controller="FiltrosPermiso" asp-action="Crear" novalidate="novalidate">
+            <fieldset>
+                <legend>Adding Forms:</legend>
+@*                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div asp-validation-summary="ModelOnly"></div>
+                    </div>
+                }*@
+                <div class="row">
+                    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+
+                    <div class="col-md-4">
+                        <label asp-for="FiltroId" class="control-label">Form ID</label>
+                        <input  class="form-control" type="number" @bind-value="dynamicForms.FormID">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Type" class="control-label">Type</label>
+                            <select class="form-control" @bind="dynamicForms.Tipo">
+                                <option value="text">Text</option>
+                                <option value="number">Number</option>
+                                <option value="list">List</option>
+                                <option value="date">Date</option>
+                                <option value="check">Check</option>
+                                <option value="dropDownList">DropDownList</option>
+                            </select>
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Origen" class="control-label">Value</label>
+                        <input asp-for="Origen" class="form-control" @bind-value="dynamicForms.Valor">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrigenLabel" class="control-label">Module</label>
+                        <select class="form-control" @onchange="SelectedModuleChanged">
+                            <option value="VacantesInternas">Vacantes Internas</option>
+                            <option value="InscripcionesCursos">Cursos</option>
+                            <option value="EncuestasInternas">Encuestas Internas</option>
+                            <option value="EncuestasExternas">Encuestas Externas</option>
+                            <option value="ActualizarDatosPersonales ">Actualizar Datos Personales</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrigenValue" class="control-label">Display Value</label>
+                        <input asp-for="OrigenValue" class="form-control" @bind-value="dynamicForms.DisplayValue">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="filOperadorDefecto" class="control-label">Destination Value</label>
+                        <select class="form-control" @onchange="SelectedDestinationChanged">
+                             @foreach (var template in DynamicProps)
+                             {
+                                  <option value=@template>@template</option>
+                             }
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <a asp-action="Index" asp-controller="FiltrosPermiso" class="btn btn-danger btn-sm">Back</a>
+            <button class="btn btn-primary btn-sm" @onclick="@(() =>Crear())">Add</button>
+        </form>
+</section>
+
+<div style="overflow: scroll; height: 350px;">
+    <table class="table table-sm table-hover table-bordered mt-1">
+        <thead class="bg-blue-cau text-center">
+            <tr>
+                <th scope="col">Form ID</th>
+                <th scope="col">Module</th>
+                <th scope="col">Value</th>
+                <th scope="col">Type</th>
+                <th scope="col">Create Date</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (DynamicsForms != null)
+            {
+                @foreach (var item in DynamicsForms)
+                {
+
+                    <tr>
+                        <td>@item.FormID</td>
+                        <td>@item.Modulo</td>
+                        <td>@item.Valor</td>
+                        <td>@item.Tipo</td>
+                        <th class="text-nowrap">@item.Fecha.Value.ToString("yyyy-MM-dd")</th>
+                        <td>
+                            <button class="btn btn-primary btn-sm" @onclick="@(e => DynamicsForms.Remove(DynamicsForms.FirstOrDefault(d => d.FormID == @item.FormID)))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <button class="btn btn-primary btn-sm" @onclick="@(async() => await Save())">Save</button>
+</div>
+
+@code {
+
+    [Parameter]
+    public string FormID { get; set; }
+
+    public static List<DynamicForms> DynamicsForms = new();
+    public DynamicForms dynamicForms = new();
+
+    int filtroId;
+
+    public string[] DynamicProps = new string[] { };
+
+
+    private void Crear()
+    {
+        dynamicForms.Fecha = DateTime.Now;
+        DynamicsForms.Add(dynamicForms);
+    }
+
+    private async Task Save()
+    {
+        await DynamicFormsService.Add(DynamicsForms);
+        DynamicsForms = new();
+    }
+
+    private void SelectedModuleChanged(ChangeEventArgs e)
+    {
+        dynamicForms.Modulo = (string)e.Value;
+
+        if (e.Value is not null)
+        {
+            var type = Assembly.GetExecutingAssembly().GetTypes()
+                      .FirstOrDefault(t => t.IsClass && t.Name.Contains((string)e.Value) 
+                      && t.Name.Length == ((string)e.Value).Length);
+            DynamicProps = Activator.CreateInstance(type)
+                      .GetType().GetProperties().Select(p => p.Name).ToArray()?? new string[] { };
+        }
+    }
+
+    private void SelectedDestinationChanged(ChangeEventArgs e)
+    {
+        dynamicForms.DestinationValue = (string)e.Value;
+    }
+
+}

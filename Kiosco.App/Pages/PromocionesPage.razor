@@ -1,0 +1,61 @@
+﻿@page "/PromocionesPage"
+
+@using Kiosco.App.Data
+@using Kiosco.App.Services
+@using System.Reflection
+@inject IPromocionesService PromocionesService;
+
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex bd-highlight">
+            <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Promociones</p>
+        </div>
+    </div>
+</div>
+
+      <RadzenDataList PageSize="8" WrapItems="true" AllowPaging="true" Data="@Promociones" TItem="Promociones">
+                    <Template Context="order">
+              <RadzenCard Style="width: 350px;" Class="rz-border-radius-3">
+                  <div class="row">
+                      <div class="col-md-8 text-truncate">
+                          <RadzenBadge BadgeStyle="BadgeStyle.Light" Text=@($"{order.ACTION}") Class="me-1" IsPill="true" />
+                          <RadzenText TextStyle="TextStyle.Caption" class="mb-0">@(order.LAST_NAME)</RadzenText>
+                      </div>
+                      <div class="col-md-4 text-end">
+                          <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", order.EFFECTIVE_START_DATE)}") IsPill="true" />
+                      </div>
+                  </div>
+                  <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
+                  <div class="d-flex flex-row align-items-center">
+                      <RadzenImage Path="css/imgs/imgto1.PNG" Class="rz-border-radius-10 float-start me-3" Style="width: 80px; height: 80px;" />
+                      <div>
+                          <RadzenText TextStyle="TextStyle.Subtitle1" class="mb-0"><strong>@(order.POSITION_NAME.Replace(@$""""," "))</strong></RadzenText>
+                          <RadzenText TextStyle="TextStyle.Body2" class="mb-0">@order.PERSON_NUMBER</RadzenText>
+                          <RadzenText TextStyle="TextStyle.Caption" class="mb-0">@(order.PERSON_NUMBER), @(order.PERSON_NUMBER)</RadzenText>
+                      </div>
+                  </div>
+              </RadzenCard>
+          </Template>
+      </RadzenDataList>
+
+
+@code {
+    
+    public static List<Promociones> Promociones = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+
+            Promociones =(List<Promociones>) await PromocionesService.GetPromocionesAsync();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error trying to get Web Response Item Report DTO");
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.InnerException);
+        }
+    }
+}

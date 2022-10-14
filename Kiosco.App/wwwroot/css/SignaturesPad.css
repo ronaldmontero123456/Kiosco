@@ -1,0 +1,30 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+:root {
+    --primary-color: #000;
+}
+
+.signature-pad-form {
+    max-width: 100%;
+}
+
+.signature-pad {
+    cursor: url(pen.png) 1 26, pointer;
+    border: 2px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.clear-button {
+    color: var(--primary-color);
+}
+
+.submit-button {
+    width: 20rem;
+    background: #001E6C;
+    border: none;
+    padding: 0.5rem 1rem;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 2rem;
+    line-height: 2;
+    border-radius:.3rem;
+}

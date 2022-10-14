@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.9" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Radzen.Blazor" Version="4.0.0" />
+    <PackageReference Include="System.Data.OleDb" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DPWorldDR.Shared.Contracts">
+      <HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Contracts\DPWorldDR.Shared.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="DPWorldDR.Shared.Entities">
+      <HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Entities\DPWorldDR.Shared.Entities.dll</HintPath>
+    </Reference>
+    <Reference Include="DPWorldDR.Shared.Services.Http">
+      <HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Services.Http\DPWorldDR.Shared.Services.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="DPWorldDR.Shared.Services.OracleServices">
+      <HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Services.OracleServices\DPWorldDR.Shared.Services.OracleServices.dll</HintPath>
+    </Reference>
+    <Reference Include="DPWorldDR.Shared.Utilities">
+      <HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Utilities\DPWorldDR.Shared.Utilities.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

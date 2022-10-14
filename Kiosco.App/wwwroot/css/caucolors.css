@@ -1,0 +1,79 @@
+/* Colors used in Logos */
+
+.bg-red-cau {
+	background-color: #C51F41 !important;
+	color: #FFFFFF !important;
+}
+
+.bg-blue-cau {
+	background-color: #173A64 !important;
+	color: #FFFFFF !important;
+}
+
+.bg-green-cau {
+	background-color: #00A172 !important;
+	color: #FFFFFF !important;
+}
+
+.bg-black-cau {
+	background-color: #232323 !important;
+	color: #FFFFFF !important;
+}
+
+.bg-white-cau {
+	background-color: #FFFFFF !important;
+	color: #232323 !important;
+}
+
+
+/* Primaries *********************************************/
+
+.bg-pr-orange-cau {
+	background-color: #F58220 !important;
+	color: #FFFFFF !important;
+}
+
+.bg-pr-yellow-cau {
+	background-color: #FDB71D !important;
+	color: #FFFFFF !important;
+}
+
+.bg-pr-mediumblue-cau {
+	background-color: #41B6E6 !important;
+	color: #173A64 !important;
+}
+
+.bg-pr-pms298-cau {
+	background-color: #41B6E6 !important;
+	color: #FFFFFF !important;
+}
+
+
+/* Secondary *********************************************/
+
+.bg-sc-pms7401-cau {
+	background-color: #F5E1A4 !important;
+	color: #A7A8AA !important;
+}
+
+.bg-sc-warmgray-cau {
+	background-color: #A59C94 !important;
+	color: #FFFFFF !important;
+}
+
+.bg-sc-pms277-cau {
+	background-color: #ABCAE9 !important;
+	color: #FFFFFF !important;
+}
+
+.bg-sc-coolgray-cau {
+	background-color: #A7A8AA !important;
+	color: #FFFFFF !important;
+}
+
+/* Colors used in Button to Gradient */
+
+.bg-pr-gradient-cau {
+	background: linear-gradient(90deg,#03a9f4,#f441a5,#ffeb3b,#03a9f4);
+	color: #FFFFFF !important;
+}

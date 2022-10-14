@@ -1,0 +1,104 @@
+﻿@page "/Cursos"
+
+@inject NavigationManager NavigationManager;
+
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex bd-highlight">
+            <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Cursos</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row py-2">
+        <div class="col">
+            <RadzenCard>
+                <RadzenDataList WrapItems="true" AllowPaging="true" Data="@Cliente" TItem="Clientes" PageSize="4" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                    <Template Context="product">
+                        <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
+                            <div class="container">
+                                <div class="row" style="margin-left: calc(var(--bs-gutter-x) * -1); margin-right: calc(var(--bs-gutter-x) * -1)">
+                                    <div class="col-lg-3 p-3 product-title">
+                                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(product.Name)</RadzenText>
+                                    </div>
+                                    <div class="col-lg-7 p-3">
+                                        <div class="row d-flex">
+                                            <div class="col-md-6 col-lg-2">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Id</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.CursoId)</RadzenText>
+                                            </div>
+                                            <div class="col-md-6 col-lg-2">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Name</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.Name)</RadzenText>
+                                            </div>
+                                            <div class="col-md-6 col-lg-5">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Descripcion</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.Descripcion)</RadzenText>
+                                            </div>
+                                            <div class="col-md-6 order-first order-lg-last col-lg-3 text-sm-start text-lg-end mb-3 mb-lg-0">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Descripcion</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.Descripcion)</RadzenText>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 p-3">
+                                        <RadzenButton Text="Inscribirme" Click=@(args => Inscribirme(product.CursoId))  
+                                                      class="bg bg-blue-cau" />
+                                    </div>
+                                </div>
+                            </div>
+                        </RadzenCard>
+                    </Template>
+                </RadzenDataList>
+
+            </RadzenCard>
+        </div>
+    </div>
+</div>
+
+<style>
+.product-title {
+    min-height: 72px;
+    background-color: var(--rz-secondary-lighter);
+}
+.price-badge {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+    padding: 8px;
+}
+</style>
+
+@code {
+
+    public class Clientes
+    {
+        public int CursoId { get; set; }
+        public string? Name { get; set; }
+        public string? Descripcion { get; set; }
+        public int Cantidad { get; set; }
+    }
+
+
+    List<Clientes> Cliente = new List<Clientes>() { 
+        new Clientes() { CursoId = 1,Name = "Clean Code", Descripcion = "How To Wash Your Code With Soap", Cantidad = 12 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 2,Name = "Bartender", Descripcion = "Bartender", Cantidad = 1 }, 
+        new Clientes() { CursoId = 3,Name = "Dark Web", Descripcion = "How To Navigate in Dark Web", Cantidad = 15 }, };
+
+
+
+    void Inscribirme(int CursoId)
+    {
+        NavigationManager.NavigateTo($"/Cursos/InscripcionesCursos/{CursoId}");
+    }
+}

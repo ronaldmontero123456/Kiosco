@@ -1,0 +1,70 @@
+﻿@page "/NuevosIngresos"
+
+
+@using Kiosco.App.Data
+@using Kiosco.App.Services
+@using System.Reflection
+@inject IPromocionesService PromocionesService;
+
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex bd-highlight">
+            <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Nuevos Ingresos</p>
+        </div>
+    </div>
+</div>
+
+      <RadzenDataList PageSize="3" WrapItems="true" AllowPaging="true" Data="@Promociones" TItem="Promociones">
+          <Template Context="order">
+               <RadzenCard Class="m-3">
+                   <div class="d-flex flex-row p-3">
+                       <RadzenImage Path="css/imgs/imgto1.PNG" Class="rounded-circle float-start me-3" Style="width: 100px; height: 100px;" />
+                       <div>
+                           <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-1 mb-0">Employee</RadzenText>
+                           <RadzenText TextStyle="TextStyle.Body1"><b>@(order.LAST_NAME)</b></RadzenText>
+                           <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-3 mb-0">Company</RadzenText>
+                           <RadzenText TextStyle="TextStyle.Body1"><b>Dp World</b></RadzenText>
+                       </div>
+                   </div>
+                   <RadzenCard Class="my-3 rz-background-color-primary-lighter rz-shadow-0 rz-border-radius-0" style="margin: 0 calc(-1 * var(--rz-card-padding)); padding: 2rem;">
+                       <RadzenText TextStyle="TextStyle.H6" Class="rz-color-primary-light"><strong>Delivery Information</strong></RadzenText>
+                       <div class="row">
+                           <div class="col-md-4">
+                               <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">Country</RadzenText>
+                               <RadzenText TextStyle="TextStyle.Body1"><b>Republica Dominicana</b></RadzenText>
+                               <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">City</RadzenText>
+                               <RadzenText TextStyle="TextStyle.Body1"><b>Santo Domingo</b></RadzenText>
+                           </div>
+                           <div class="col-md-8">
+                               <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">Ship name</RadzenText>
+                               <RadzenText TextStyle="TextStyle.Body1"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", order.EFFECTIVE_START_DATE)}")</b></RadzenText>
+                               <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">Freight</RadzenText>
+                               <RadzenText TextStyle="TextStyle.Body1"><b>@(order.ACTION)</b></RadzenText>
+                           </div>
+                       </div>
+                   </RadzenCard>
+               </RadzenCard>
+          </Template>
+      </RadzenDataList>
+
+
+@code {
+    
+    public static List<Promociones> Promociones = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+
+            Promociones =(List<Promociones>) await PromocionesService.GetPromocionesAsync();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error trying to get Web Response Item Report DTO");
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.InnerException);
+        }
+    }
+}
