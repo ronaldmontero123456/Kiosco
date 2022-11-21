@@ -1,0 +1,121 @@
+﻿@page "/VolantesPagos"
+@using KioscoWebView.Data
+@using KioscoWebView.Services
+@inject IVolantesPagosService _VolantesPagos;
+@inject NavigationManager NavigationManager;
+
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex flex-row align-items-center">
+            <RadzenImage Path="css/imgs/EncuestaIcon.png" Class="rz-border-radius-10 float-start me-3" Style="width: 50px; height: 40px;" />
+              <div class="d-flex bd-highlight">
+                   <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Volante De Pago</p>
+              </div>
+           <button type="button" class="btn btn-sm float-end" title="Print">
+                <i class="bi bi-printer-fill"></i>
+           </button>
+        </div>      
+    </div>
+</div>
+
+<div class="cert-lab">
+
+      <RadzenImage Path="css/imgs/image.png" Class="rz-border-radius-10 float-start me-3" Style="width: 150px; height: 100px;" />
+    <div class="row">
+        <div class="col-md-4 align-items-left d-flex">
+             <h4>periodo.:</h4>
+        </div>
+        <div class="col-md-4 align-items-left d-flex">
+             <h4>Nombre.:</h4>
+             <h4>@VolantesPagosDetail.nombres</h4>
+        </div>
+        <div class="col-md-4 align-items-left d-flex">
+             <h4>No. Cuenta.:</h4>
+             <h4>@VolantesPagosDetail.numero_cuenta_banco</h4>
+        </div>
+        <div class="col-md-4 align-items-left d-flex">
+             <h4>Cargo.:</h4>
+             <h4>@VolantesPagosDetail.cargo</h4>
+        </div>
+        <div class="col-md-4 align-items-left d-flex">
+             <h4>Fecha Ingreso.:</h4>
+             <h4>@VolantesPagosDetail.fecha_ingreso</h4>
+        </div>
+        <div class="col-md-4 align-items-left d-flex">
+             <h4>Cedula.:</h4>
+             <h4>@VolantesPagosDetail.cedula</h4>
+        </div>
+        <div class="col-md-4 align-items-left d-flex">
+             <h4>Sueldo.:</h4>
+             <h4>@VolantesPagosDetail.salario</h4>
+        </div>
+        <div class="col-md-4 align-items-left d-flex">
+             <h4>Depto.:</h4>
+             <h4>@VolantesPagosDetail.depto</h4>
+        </div>
+    </div>
+    
+
+
+ <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="50" AllowSorting="true" Data="@VolantesPagosDetails" TItem="VolantesPagosItem">
+
+     <Columns>
+         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="descripcion" Title="Movimiento" />
+         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="cant_horas" Title="Sueldo/Hr. Cant/Hr." />
+         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="monto" Title="Monto">
+            <FooterTemplate>
+                Totales.:   <b>@FullMonto.ToString("N2")</b>
+            </FooterTemplate>
+         </RadzenDataGridColumn>
+         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="descuento" Title="Desc.">
+            <FooterTemplate>
+                Total Desc.:   <b>@FullDescuento.ToString("N2")</b>
+            </FooterTemplate>
+         </RadzenDataGridColumn>
+         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="descuento" Title="Balance" />
+     </Columns>    
+ </RadzenDataGrid>
+
+  <h4>Neto a Cobrar.: @FullNetoCobrar.ToString("N2")</h4>
+</div>
+
+      <div class="col-lg-2 p-3">
+          <RadzenButton Text="VOLVER" Click="@(args => Volver())" class="bg bg-blue-cau" />
+      </div>
+
+@code {
+
+
+
+    static List<VolantesPagosItem> VolantesPagosDetails = new();
+
+    static float FullMonto;
+    static float FullDescuento;
+    static float FullNetoCobrar;
+    static VolantesPagosItem VolantesPagosDetail = new();
+
+    protected async override void OnInitialized()
+    {
+        try
+        {
+            var result = await _VolantesPagos.GetVolantesPagos();
+            VolantesPagosDetails = result.items.ToList();
+            FullDescuento = VolantesPagosDetails.Sum(v => v.descuento); 
+            FullMonto = VolantesPagosDetails.Sum(v => v.monto);
+            FullNetoCobrar = FullMonto - FullDescuento;
+            VolantesPagosDetail = VolantesPagosDetails.FirstOrDefault();
+
+        }catch(Exception ex)
+        {
+            
+        }
+
+        base.OnInitialized();
+    }
+
+
+    void Volver()
+    {
+        NavigationManager.NavigateTo($"/Home");
+    }
+}

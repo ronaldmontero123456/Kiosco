@@ -1,0 +1,339 @@
+﻿@page "/ResumenHorasExtras"
+@using System.IO
+@using DPWCMSApp.Services
+@using KioscoWebView.Data
+@using KioscoWebView.Data.DTO
+@using KioscoWebView.Data.Enums
+@using KioscoWebView.Services
+@inject ITblResumenHorasService ResumenHorasService;
+@inject ILocalStorageService localStorage;
+@inject NavigationManager NavigationManager;
+
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex flex-row align-items-center">
+            <RadzenImage Path="css/imgs/Calendar.png" Class="rz-border-radius-10 float-start me-3" Style="width: 50px; height: 40px;" />
+              <div class="d-flex bd-highlight">
+                  <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Resumen De Horas Extras</p>
+              </div>
+        </div>      
+    </div>
+</div>
+
+  <RadzenImage Path="css/imgs/image.png" Class="rz-border-radius-10 float-start me-3" Style="width: 150px; height: 100px;" />
+
+<div class="card mt-1">
+    
+    <div class="card-footer text-muted">
+        <div class="d-flex justify-content-lg-between">
+            <div class="">
+                <button type="button" @onclick="@(async() => await QPas())"> @*@onclick="ClearFields">*@
+                    <img src="css/imgs/icons8-izquierda.png" width="50" height="50">       
+                </button>
+                <button type="button" @onclick="@(async() => await QProx())"> @*@onclick="Search">*@
+                    <img src="css/imgs/icons8-derecha.png" width="50" height="50">  
+                </button>
+            </div>
+            <div class="flex-grow-1">
+                <div class="alert @alertClass alert-dismissible fade show py-1 mx-1 @display" role="alert">
+                    <strong>Warning</strong> @message
+                    <button type="button" class="btn-close btn-sm py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="">
+                @if (ItemDTOs.Any())
+                {
+                    <button type="button" class="btn btn-sm float-end" title="Send"> @*@onclick="@(async() => await SendExcel())">*@
+
+@*                        @if (BtnExportLoading)
+                        {
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <i class="bi bi-envelope"></i>
+                        }*@
+                    </button>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@if (BarLoading)
+{
+    <div class="bar-light-grey mt-1">
+        <div class="bar-green"></div>
+    </div>
+}
+
+@if (ShowWarning)
+{
+    <div class="alert alert-warning my-1" role="alert">
+        @DiffDays días. Solo puede seleccionar hasta 31 días.
+    </div>
+}
+
+<div style="overflow: scroll; height: 350px;">
+    <table class="table table-sm table-hover table-bordered mt-1">
+        <thead class="bg-blue-cau text-center">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">NUMBER</th>
+                <th scope="col">NAME</th>
+                <th scope="col">ROLE</th>
+                <th scope="col">GRADE</th>
+                <th scope="col">DEPARTMENT</th>
+                <th scope="col">SUBDEPARTMENT</th>
+                <th scope="col">WORKEDHOURS</th>
+                <th scope="col">VACATIONDAYS</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ItemDTOs.Any())
+            {
+                @foreach (var item in ItemDTOs)
+                {
+                    <tr>
+                        <td>@item.employeeId</td>
+                        <th>@item.employeeNumber</th>
+                        <th>@item.employeeName</th>
+                        <td>@item.role</td>
+                        <td>@item.grade</td>
+                        <td>@item.department</td>
+                        <td>@item.subDepartment</td>
+                        <td>@item.workedHours</td>
+                        <td>@item.vactionDays</td>
+                    </tr>
+                }
+            }
+@*            @if (!itemdtos.any() && placeholder == false)
+            {
+                <tr>
+                    <th colspan="14">no hay resultados que mostrar</th>
+                </tr>
+            }*@
+
+@*            @if (placeholder)
+            {
+                <tr>
+                    <th colspan="14">
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                            <span class="placeholder col-12 bg-secondary"></span>
+                            <span class="placeholder col-12"></span>
+                            <span class="placeholder col-12 bg-secondary"></span>
+                        </p>
+                    </th>
+                </tr>
+            }*@
+        </tbody>
+    </table>
+</div>
+
+      <div class="col-lg-2 p-3">
+          <RadzenButton Text="VOLVER" Click="@(args => Volver())" class="bg bg-blue-cau" />
+      </div>
+
+
+
+@code {
+
+    public bool BtnLoading = false;
+    public bool BtnExportLoading = false;
+    public bool BarLoading = false;
+    public bool PlaceHolder = false;
+    double DiffDays = 0.00;
+    bool ShowWarning = false;
+    public int IsDownloadStarted { get; set; } = 0;
+    public string display { get; set; } = "d-none";
+    public string message { get; set; } = "";
+    public string alertClass { get; set; } = "";
+    public bool ValidSearch = false;
+    public PayrollSummary payrollSummary = new();
+    //DTOs
+    public static GlobalSearchDTO globalSearchDTO = new();
+    private string SelectedDelayCode { get; set; } = "-";
+
+    //Web Responses
+    private List<TblResumenHoras> WebResponseItemDTO = new();
+    private List<TblResumenHoras> ItemDTOs = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        BarLoading = true;
+
+        try
+        {
+
+            payrollSummary = new(){
+                                Month = DateTime.Now.ToString("MMM"),
+                                Year = DateTime.Now.Year.ToString(),
+                                PayPeriod = "P2",
+                                BUCode = "3333",
+                                CostCenter = "5032"};
+
+            await Search();
+
+            globalSearchDTO.DateFrom = DateTime.Now;
+            //WebResponseItemReportDTO = await InvoiceService.GenerateItemsReportBetweenDays(globalSearchDTO);
+            //if (WebResponseItemReportDTO != null)
+            //{
+            //    if (WebResponseItemReportDTO.statusCode == "200")
+            //    {
+            //        ItemReportDTOs = WebResponseItemReportDTO.body;
+            //    }
+            //    else
+            //    {
+            //        //Console.WriteLine("Web Response Item Report DTO Status");
+            //        //Console.WriteLine("Status Code  : " + WebResponseItemReportDTO.statusCode);
+            //        //Console.WriteLine("Message      : " + WebResponseItemReportDTO.message);
+            //    }
+
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Function: OnInitializedAsync() - WebResponseItemReportDTO Is NULL : ");
+            //}
+
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error trying to get Web Response Item Report DTO");
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.InnerException);
+        }
+        finally
+        {
+            BarLoading = false;
+        }
+    }
+
+    private async Task Search()
+    {
+        BtnLoading = true;
+        BarLoading = true;
+        PlaceHolder = true;
+        try
+        {
+
+            globalSearchDTO.PageNumber = 1;
+
+            //DiffDays = globalSearchDTO.DateTo.Subtract(globalSearchDTO.DateFrom).TotalDays;
+            //Console.WriteLine("DiffDays : " + DiffDays);
+
+            // Is the Search Valid?
+            //if (ValidSearch)
+            //{
+
+
+            WebResponseItemDTO = await ResumenHorasService.Get(payrollSummary);
+            if (WebResponseItemDTO != null)
+            {
+                if (WebResponseItemDTO is not null)
+                {
+                    string carnetCode = await localStorage.GetItem<string>("CarnetCode");
+                    ItemDTOs = WebResponseItemDTO.Where(w => w.employeeNumber == carnetCode).ToList();
+                    display = "d-none";
+                    message = "";
+                    alertClass = "";
+
+                }
+                else
+                {
+                    //Console.WriteLine("WebResponseItemReportDTO Status");
+                    //Console.WriteLine("Status Code : " + WebResponseItemDTO.statusCode);
+                    //Console.WriteLine("Message      : " + WebResponseItemDTO.message);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Function: Search() - WebResponseItemReportDTO Is NULL : ");
+            }
+            //}
+
+        }
+        catch (Exception ex)
+        {
+            display = "";
+            message = "Error trying to get Item Report DTO";
+            alertClass = "alert-warning";
+            Console.WriteLine("Error trying to get Item Report DTO");
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.InnerException);
+        }
+        finally
+        {
+            BtnLoading = false;
+            BarLoading = false;
+            PlaceHolder = false;
+        }
+
+    }
+
+    private async Task QPas()
+    {
+        BtnLoading = true;
+        BarLoading = true;
+        PlaceHolder = true;
+        try
+        {
+            globalSearchDTO.DateFrom = globalSearchDTO.DateFrom.Value.AddDays(-Math.Abs(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) / 2));
+            payrollSummary.Month = globalSearchDTO.DateFrom.Value.ToString("MMM");
+            payrollSummary.Year = globalSearchDTO.DateFrom.Value.Year.ToString();
+            payrollSummary.PayPeriod = payrollSummary.PayPeriod == "P2" ? "P1" : "P2";
+
+            await Search();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.InnerException);
+        }
+        finally
+        {
+            BtnLoading = false;
+            BarLoading = false;
+            PlaceHolder = false;
+        }
+
+    }
+
+    private async Task QProx()
+    {
+        BtnLoading = true;
+        BarLoading = true;
+        PlaceHolder = true;
+        try
+        {
+            globalSearchDTO.DateFrom = globalSearchDTO.DateFrom.Value.AddDays(-Math.Abs(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) / 2));
+            //payrollSummary.Month = globalSearchDTO.DateFrom.Value.Month.ToString();
+            payrollSummary.Year = globalSearchDTO.DateFrom.Value.Year.ToString();
+            payrollSummary.PayPeriod = payrollSummary.PayPeriod == "P2" ? "P1" : "P2";
+            await Search();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.InnerException);
+        }
+        finally
+        {
+            BtnLoading = false;
+            BarLoading = false;
+            PlaceHolder = false;
+        }
+
+    }
+    
+    void Volver()
+    {
+        NavigationManager.NavigateTo($"/home");
+    }
+
+}

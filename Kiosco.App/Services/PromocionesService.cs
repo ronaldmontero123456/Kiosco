@@ -138,6 +138,11 @@ namespace Kiosco.App.Services
                     var re = HcmEmployeeDto?.GetType().GetProperties().FirstOrDefault(p => p.Name.Contains(res[i].Trim()));
                     if(re != null)
                     re.SetValue(HcmEmployeeDto, value.Split(',')[i]);
+                    else
+                    {
+                        re = HcmEmployeeDto?.GetType().GetProperties().FirstOrDefault(p => p.Name.Contains("FIRST_NAME"));
+                        re?.SetValue(HcmEmployeeDto, value.Split(',')[i]);
+                    }
                 }
 
                 ValuesToReturn.Add((T)HcmEmployeeDto);

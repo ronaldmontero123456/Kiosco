@@ -1,10 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   </PropertyGroup>
+
+
+	<PropertyGroup>
+		<UseRazorSourceGenerator>false</UseRazorSourceGenerator>
+	</PropertyGroup>
 
 
   <ItemGroup>
@@ -12,7 +18,33 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.7" />
+  	<FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="6.0.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Radzen.Blazor" Version="4.3.6" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="DPWorldDR.Shared.Contracts">
+			<HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Contracts\DPWorldDR.Shared.Contracts.dll</HintPath>
+		</Reference>
+		<Reference Include="DPWorldDR.Shared.Entities">
+			<HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Entities\DPWorldDR.Shared.Entities.dll</HintPath>
+		</Reference>
+		<Reference Include="DPWorldDR.Shared.Services.Http">
+			<HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Services.Http\DPWorldDR.Shared.Services.Http.dll</HintPath>
+		</Reference>
+		<Reference Include="DPWorldDR.Shared.Services.OracleServices">
+			<HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Services.OracleServices\DPWorldDR.Shared.Services.OracleServices.dll</HintPath>
+		</Reference>
+		<Reference Include="DPWorldDR.Shared.Utilities">
+			<HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Utilities\DPWorldDR.Shared.Utilities.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
 </Project>

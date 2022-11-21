@@ -1,6 +1,7 @@
 ﻿using DPWCMSApp.Services;
 using Kiosco.App.Data;
 using Kiosco.App.Data.DTO;
+using Kiosco.Services;
 
 namespace Kiosco.App.Services
 {

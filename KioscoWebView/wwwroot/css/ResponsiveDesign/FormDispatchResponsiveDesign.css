@@ -1,0 +1,28 @@
+﻿@media only screen and (max-device-width : 1030px) {
+    
+
+    .dispatch_inputs, .return_inputs {
+        flex-direction: column;
+    }
+    .box_carnet{
+        padding-left:1.3rem;
+    }
+
+
+    .form_imgs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form_imgs > div {
+        width: 18rem;
+        height: 8rem;
+    }
+
+
+    .form_list{
+        overflow-x:auto;
+    }
+    
+
+    
+}

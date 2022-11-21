@@ -1,12 +1,13 @@
 ﻿using DPWCMSApp.Model;
+using DPWCMSApp.Services;
 using Kiosco.App.Data;
 using Microsoft.AspNetCore.Components;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 
-namespace DPWCMSApp.Services
+namespace Kiosco.Services
 {
 
     public interface IHttpService
@@ -24,19 +25,16 @@ namespace DPWCMSApp.Services
         private HttpClient _httpClient;
         private NavigationManager _navigationManager;
         private ILocalStorageService _localStorageService;
-        private IConfiguration _configuration;
 
         public HttpService(
             HttpClient httpClient,
             NavigationManager navigationManager,
-            ILocalStorageService localStorageService,
-            IConfiguration configuration
+            ILocalStorageService localStorageService
         )
         {
             _httpClient = httpClient;
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
-            _configuration = configuration;
         }
 
         public async Task<T> Get<T>(string uri)
@@ -57,22 +55,22 @@ namespace DPWCMSApp.Services
         public async Task<T> Post<T>(string uri, object value)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
-            string post = JsonSerializer.Serialize(value);
-            request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
+            string post = JsonConvert.SerializeObject(value);
+            request.Content = new StringContent(JsonConvert.SerializeObject(value), Encoding.UTF8, "application/json");
             return await sendRequest<T>(request);
         }
 
         public async Task<byte[]> PostFile<T>(string uri, object value)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
-            request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
+            request.Content = new StringContent(JsonConvert.SerializeObject(value), Encoding.UTF8, "application/json");
             return await sendRequest2<T>(request);
         }
 
         public async Task<T> Put<T>(string uri, object value)
         {
             var request = new HttpRequestMessage(HttpMethod.Put, uri);
-            request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
+            request.Content = new StringContent(JsonConvert.SerializeObject(value), Encoding.UTF8, "application/json");
             return await sendRequest<T>(request);
         }
 
@@ -109,8 +107,8 @@ namespace DPWCMSApp.Services
                 var error = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
                 throw new Exception(error["message"]);
             }
-
-            return await response.Content.ReadFromJsonAsync<T>();
+            var resultOjbect = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(resultOjbect);
         }
 
         private async Task<byte[]> sendRequest2<T>(HttpRequestMessage request)
@@ -157,7 +155,7 @@ namespace DPWCMSApp.Services
                 };
 
                 var requestToLogin = new HttpRequestMessage(HttpMethod.Post, "/Token");
-                requestToLogin.Content = new StringContent(JsonSerializer.Serialize(authenticate), Encoding.UTF8, "application/json");
+                requestToLogin.Content = new StringContent(JsonConvert.SerializeObject(authenticate), Encoding.UTF8, "application/json");
                 var token = await client.SendAsync(requestToLogin);
 
                 //var isApiUrl = !request.RequestUri.IsAbsoluteUri;

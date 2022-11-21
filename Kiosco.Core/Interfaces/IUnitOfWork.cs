@@ -10,6 +10,7 @@ namespace Kiosco.Core.Interfaces
     {
         public ITblResumenHorasRepository TblResumenHorasRepository { get; }
         public IDynamicFormsRepository DynamicFormsRepository { get; }
+        public IVacantesRepository VacantesRepository { get; }
         public IvEmpleadosRepository vEmpleadosRepository { get; }
         public ILoginRepository LoginRepository { get; }
         Task SaveChangesAsync();

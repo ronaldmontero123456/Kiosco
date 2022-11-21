@@ -5,48 +5,59 @@
 @using Kiosco.App.Services
 @using System.Reflection
 @inject IPromocionesService PromocionesService;
+@inject NavigationManager NavigationManager;
 
-<div class="card mt-1">
+@*<div class="card mt-1">
     <div class="card-body p-2 text-center">
         <div class="d-flex bd-highlight">
             <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Nuevos Ingresos</p>
         </div>
     </div>
+</div>*@
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex flex-row align-items-center">
+            <RadzenImage Path="css/imgs/Cargo.png" Class="rz-border-radius-10 float-start me-3" Style="width: 80px; height: 80px;" />
+              <div class="d-flex bd-highlight">
+                 <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Nuevos Ingresos</p>
+              </div>
+ 
+    </div>
 </div>
+</div>
+    <RadzenImage Path="css/imgs/image.png" Class="rz-border-radius-10 float-start me-3" Style="width: 150px; height: 100px;" />
 
-      <RadzenDataList PageSize="3" WrapItems="true" AllowPaging="true" Data="@Promociones" TItem="Promociones">
-          <Template Context="order">
-               <RadzenCard Class="m-3">
-                   <div class="d-flex flex-row p-3">
-                       <RadzenImage Path="css/imgs/imgto1.PNG" Class="rounded-circle float-start me-3" Style="width: 100px; height: 100px;" />
-                       <div>
-                           <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-1 mb-0">Employee</RadzenText>
-                           <RadzenText TextStyle="TextStyle.Body1"><b>@(order.LAST_NAME)</b></RadzenText>
-                           <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-3 mb-0">Company</RadzenText>
-                           <RadzenText TextStyle="TextStyle.Body1"><b>Dp World</b></RadzenText>
-                       </div>
-                   </div>
-                   <RadzenCard Class="my-3 rz-background-color-primary-lighter rz-shadow-0 rz-border-radius-0" style="margin: 0 calc(-1 * var(--rz-card-padding)); padding: 2rem;">
-                       <RadzenText TextStyle="TextStyle.H6" Class="rz-color-primary-light"><strong>Delivery Information</strong></RadzenText>
-                       <div class="row">
-                           <div class="col-md-4">
-                               <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">Country</RadzenText>
-                               <RadzenText TextStyle="TextStyle.Body1"><b>Republica Dominicana</b></RadzenText>
-                               <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">City</RadzenText>
-                               <RadzenText TextStyle="TextStyle.Body1"><b>Santo Domingo</b></RadzenText>
-                           </div>
-                           <div class="col-md-8">
-                               <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">Ship name</RadzenText>
-                               <RadzenText TextStyle="TextStyle.Body1"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", order.EFFECTIVE_START_DATE)}")</b></RadzenText>
-                               <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">Freight</RadzenText>
-                               <RadzenText TextStyle="TextStyle.Body1"><b>@(order.ACTION)</b></RadzenText>
-                           </div>
-                       </div>
-                   </RadzenCard>
-               </RadzenCard>
+
+      <RadzenDataList PageSize="8" WrapItems="true" AllowPaging="true" Data="@Promociones" TItem="Promociones">
+                    <Template Context="order">
+              <RadzenCard Style="width: 350px;" Class="rz-border-radius-3">
+                  <div class="row">
+                      <div class="col-md-8 text-truncate">
+                          <RadzenBadge BadgeStyle="BadgeStyle.Light" Text=@($"{order.ACTION}") Class="me-1" IsPill="true" />
+                      </div>
+                      <div class="col-md-4 text-end">
+                          <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", order.EFFECTIVE_START_DATE)}") IsPill="true" />
+                      </div>
+                  </div>
+                  <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
+                  <div class="d-flex flex-row align-items-center">
+                      @*<RadzenImage Path="file://192.168.6.233/Security/Internal/2.%20GESTI%C3%93N%20DE%20PERSONAL/1.%20FOTOS/1.%20EMPLEADOS/PEOPLE%20DEPARTAMET/2896-AMBAR%20MELO%20MATIAS.jpg" Class="rz-border-radius-10 float-start me-3" Style="width: 80px; height: 80px;" />*@
+                      <img src="//192.168.6.233/Security/Internal/2.%20GESTI%C3%93N%20DE%20PERSONAL/1.%20FOTOS/1.%20EMPLEADOS/PEOPLE%20DEPARTAMET/2896-AMBAR%20MELO%20MATIAS.jpg" Class="rz-border-radius-10 float-start me-3" Style="width: 80px; height: 80px;" >
+                      <div>
+                          <RadzenText TextStyle="TextStyle.Subtitle1" class="mb-0"><strong>@(order.FIRST_NAME) @(order.LAST_NAME)</strong></RadzenText>
+                          <RadzenText TextStyle="TextStyle.Subtitle1" class="mb-0">@(order.POSITION_NAME.Replace(@$""""," "))</RadzenText>
+                          @*<RadzenText TextStyle="TextStyle.Body2" class="mb-0">@order.PERSON_NUMBER</RadzenText>*@
+                          <RadzenText TextStyle="TextStyle.Caption" class="mb-0">@(order.DEPARTMENT_NAME.Replace(@$""""," ").Replace("D - ",""))</RadzenText>
+                      </div>
+                  </div>
+              </RadzenCard>
           </Template>
       </RadzenDataList>
 
+      
+      <div class="col-lg-2 p-3">
+          <RadzenButton Text="VOLVER" Click="@(args => Volver())" class="bg bg-blue-cau" />
+      </div>
 
 @code {
     
@@ -55,9 +66,8 @@
     protected override async Task OnInitializedAsync()
     {
         try
-        {
-
-            Promociones =(List<Promociones>) await PromocionesService.GetPromocionesAsync();
+        {             
+            Promociones =(List<Promociones>)await PromocionesService.GetPromocionesAsync();
 
         }
         catch (Exception ex)
@@ -66,5 +76,10 @@
             Console.WriteLine(ex.Message);
             Console.WriteLine(ex.InnerException);
         }
+    }
+        
+    void Volver()
+    {
+        NavigationManager.NavigateTo($"/Home");
     }
 }

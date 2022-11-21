@@ -26,27 +26,42 @@ namespace Kiosco.Api.Controllers
         [HttpPost]
         public IActionResult Login([FromBody]GlovalSearch GlovalSearch)
         {
-            var response = SpReader($"spGetEmpByCarnetCode '{GlovalSearch.CarnetCode ?? ""}'");
 
-            if (response != null)
+            try
             {
-                var result = new WebResponse<string>()
+                var response = SpReader($"spGetEmpByCarnetCode '{GlovalSearch.CarnetCode ?? ""}'");
+
+                if (response != null)
                 {
-                    body = response.Rows[0].ItemArray[2].ToString(),
+                    var result = new WebResponse<string>()
+                    {
+                        body = response.Rows[0].ItemArray[2].ToString(),
+                        isSuccess = true,
+                        message = "Success",
+                        statusCode = "200",
+                    };
+                    return Ok(result);
+                }
+
+                return Ok(new WebResponse<string>()
+                {
+                    body = "Carnet Code Invalid",
                     isSuccess = true,
                     message = "Success",
                     statusCode = "200",
-                };
-                return Ok(result);
+                });
+            }
+            catch(Exception ex)
+            {
+                return Ok(new WebResponse<string>()
+                {
+                    body = "Carnet Code Invalid",
+                    isSuccess = false,
+                    message = "Success",
+                    statusCode = "200",
+                });
             }
 
-           return Ok(new WebResponse<string>()
-           {
-               body = "Carnet Code Invalid",
-               isSuccess = true,
-               message = "Success",
-               statusCode = "200",
-           });
         }
 
         public DataTable SpReader(string value)

@@ -8,12 +8,12 @@ using System.Linq.Expressions;
 
 namespace Kiosco.Infrastructure.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseRepository<TContext,T> : IBaseRepository<T> where T : class where TContext : DbContext
     {
         protected readonly DbSet<T> dbSet;
-        protected readonly KioscoContext _context;
+        protected readonly TContext _context;
 
-        public BaseRepository(KioscoContext Context)
+        public BaseRepository(TContext Context)
         {
             _context = Context;
             dbSet = Context.Set<T>();

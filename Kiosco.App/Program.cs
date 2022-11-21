@@ -1,9 +1,11 @@
+using BlazorStrap;
 using DPWCMSApp.Services;
 using DPWorldDR.Shared.Contracts;
 using DPWorldDR.Shared.Services.OracleServices;
 using Kiosco.App.Data;
 using Kiosco.App.Services;
 using Kiosco.App.Utils;
+using Kiosco.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-
-
+builder.Services.AddBootstrapCss();
 builder.Services.AddScoped(x =>
 {
     var apiUrl = new Uri(builder.Configuration["apiUrl"]);
@@ -20,16 +21,14 @@ builder.Services.AddScoped(x =>
 });
 
 
-builder.Services
-   .AddScoped<ITblResumenHorasService, TblResumenHorasService>()
-   .AddScoped<IDynamicFormsService, DynamicFormsService>()
-   .AddScoped<IHttpService, HttpService>()
-   .AddScoped<ILocalStorageService, LocalStorageService>()
-   .AddScoped<ICustomLogger, CustomLogger>()
-   .AddScoped<IOracleServices, OracleServices>()
-   .AddScoped<IPromocionesService, PromocionesService>()
-   .AddScoped<IHttpService, HttpService>()
-   .AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ITblResumenHorasService, TblResumenHorasService>().AddScoped<IDynamicFormsService, DynamicFormsService>().AddScoped<IHttpService, HttpService>().AddScoped<ILocalStorageService, LocalStorageService>().AddScoped<ICustomLogger, CustomLogger>().AddScoped<IOracleServices, OracleServices>().AddScoped<IPromocionesService, PromocionesService>()
+   .AddScoped<ILoginService, LoginService>()
+   .AddScoped<IVolantesPagosService, VolantesPagosService>()
+   .AddScoped<ICertificacionesLaboralesService, CertificacionesLaboralesService>()
+   .AddScoped<IVacantesService, VacantesService>()
+   .AddScoped<IVacantesRequisitosService, VacantesRequisitosService>();
+
+ builder.Services.AddSingleton<ViewOptionService>();
 
 var app = builder.Build();
 

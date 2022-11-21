@@ -1,15 +1,19 @@
 ﻿@page "/"
 <link rel="stylesheet" href="css/Login.css">
+@using DPWCMSApp.Services
 @using Kiosco.App.Data
 @using Kiosco.App.Data.DTO
 @using Kiosco.App.Services
 @using System.Reflection
 @inject ILoginService LoginService;
+@inject ILocalStorageService localStorageService;
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@inject ViewOptionService ViewOption
 
 <div class="row justify-content-center pt-5 mt-5">
 <div class="login-screen">
-   <img id="btnLogo" src="css/imgs/image.png" width="150" height="150" />
+   <img id="btnLogo" src="css/imgs/image.png" width="150" height="100" />
     <br />
     <div class="app-title">
         <h3>Digitar el Codigo de su Carnet</h3>
@@ -35,6 +39,12 @@
     string carnetCode = "";
     private WebResponse<string> LoginDTO = new();
 
+    protected override void OnInitialized()
+    {
+        ViewOption.Toggle(true);
+        base.OnInitialized();
+    }
+
     private async Task OnClick()
     {
         GlovalSearch glovalSearch = new GlovalSearch
@@ -44,9 +54,16 @@
 
         var result = await LoginService.LoginAsync(glovalSearch);
 
-        if(!string.IsNullOrEmpty(result.body))
+        if(result.isSuccess && !string.IsNullOrEmpty(result.body))
         {
+            await localStorageService.SetItem("CarnetCode",carnetCode);
+            await localStorageService.SetItem("CarnetMame",result.body);
+
             NavigationManager.NavigateTo("/home");
+        }else
+        {
+            await JSRuntime.InvokeVoidAsync("alertError");
+            //await Swal.FireAsync("Oops...", "Something went wrong!", "error");
         }
     }
 }

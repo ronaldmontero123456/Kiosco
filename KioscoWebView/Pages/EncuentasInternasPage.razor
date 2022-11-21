@@ -1,0 +1,100 @@
+﻿@page "/EncuentasInternas"
+@using KioscoWebView.Data
+@using KioscoWebView.Services
+@inject IVacantesService VacantesService
+
+@inject NavigationManager NavigationManager;
+
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex flex-row align-items-center">
+            <RadzenImage Path="css/imgs/Document.png" Class="rz-border-radius-10 float-start me-3" Style="width: 50px; height: 40px;" />
+              <div class="d-flex bd-highlight">
+                   <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Encuentas Internas</p>
+              </div>
+        </div>      
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row py-2">
+        <div class="col">
+            <RadzenCard>
+                <RadzenDataList WrapItems="true" AllowPaging="true" Data="@VacantesList" TItem="Vacantes" PageSize="4" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                    <Template Context="product">
+                        <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
+                            <div class="container">
+                                <div class="row" style="margin-left: calc(var(--bs-gutter-x) * -1); margin-right: calc(var(--bs-gutter-x) * -1)">
+                                    <div class="col-lg-3 p-3 product-title">
+                                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(product.Title)</RadzenText>
+                                    </div>
+                                    <div class="col-lg-7 p-3">
+                                        <div class="row d-flex">
+                                            <div class="col-md-6 order-first order-lg-last col-lg-3 text-sm-start text-lg-end mb-3 mb-lg-0">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Id</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.VacanteId)</RadzenText>
+                                            </div>
+                                            <div class="col-md-6  order-first order-lg-last col-lg-3 text-sm-start text-lg-end mb-3 mb-lg-0">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Titulo</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.Title)</RadzenText>
+                                            </div>
+                                            <div class="col-md-6 order-first order-lg-last col-lg-3 text-sm-start text-lg-end mb-3 mb-lg-0">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Descripcion</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.Descripcion)</RadzenText>
+                                            </div>
+                                            <div class="col-md-6 order-first order-lg-last col-lg-3 text-sm-start text-lg-end mb-3 mb-lg-0">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Fecha Inico</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.FechaInicio)</RadzenText>
+                                            </div>
+                                            <div class="col-md-6 order-first order-lg-last col-lg-3 text-sm-start text-lg-end mb-3 mb-lg-0">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Fecha Fin</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.FechaFin)</RadzenText>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 p-3">
+                                        <RadzenButton Text="Aplicar" Click=@(args => Aplicar()) class="bg bg-blue-cau" />
+                                    </div>
+                                </div>
+                            </div>
+                        </RadzenCard>
+                    </Template>
+                </RadzenDataList>
+
+            </RadzenCard>
+        </div>
+    </div>
+</div>
+
+<style>
+.product-title {
+    min-height: 72px;
+    background-color: var(--rz-secondary-lighter);
+}
+.price-badge {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+    padding: 8px;
+}
+</style>
+
+@code {
+
+
+    static List<Vacantes> VacantesList = new();
+
+    protected override async void OnInitialized()
+    {
+        var result = await VacantesService.GetVacantesAsync();
+        VacantesList = result.body.ToList();
+        base.OnInitialized();
+    }
+
+
+    void Aplicar()
+    {
+        NavigationManager.NavigateTo($"/VacantesInternas/VacantesAplicar");
+    }
+}

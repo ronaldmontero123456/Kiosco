@@ -1,8 +1,103 @@
 ﻿@page "/"
-@namespace Kiosco.App.Pages
+@namespace KioscoWebView.Pages
+@using KioscoWebView
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@*@{
+        Layout = null;
+    }*@
 @{
-    Layout = "_Layout";
+    Response.Headers["Cache-Control"] = "no-store";
 }
 
-<component type="typeof(App)" render-mode="ServerPrerendered" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kiosco</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="icon" href="css/imgs/DPWorld.png" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/MenuDesktop.css" rel="stylesheet" />
+    <link href="css/BannerSearch.css" rel="stylesheet" />
+    <link href="css/Form.css" rel="stylesheet" />
+    <link href="~/css/AllFormData.css" rel="stylesheet" />
+    <link href="~/css/CoverSend.css" rel="stylesheet" />
+    <link href="~/css/FilterExpediente.css" rel="stylesheet" />
+    <link href="~/css/GeneratorPDFStyle.css" rel="stylesheet" />
+    <link href="~/css/SignaturesPad.css" rel="stylesheet" />
+    <link href="~/css/ResponsiveDesign/MenuDEesktopResponsive.css" rel="stylesheet" />
+    <link href="~/css/ResponsiveDesign/HomeResponsiveDesign.css" rel="stylesheet" />
+    <link href="~/css/ResponsiveDesign/FormDispatchResponsiveDesign.css" rel="stylesheet" />
+    <link href="~/css/ResponsiveDesign/AllFormSearchResponsiveDesignt.css" rel="stylesheet" />
+    <link href="~/css/ResponsiveDesign/LoginResponsiveDesign.css" rel="stylesheet" />
+    <link href="~/css/ResponsiveDesign/GeneratePDFResponsiveDesign.css" rel="stylesheet" />
+    <link href="~/css/ButtonToGoBack.css" rel="stylesheet" />
+    <link href="~/css/ResponsiveDesign/Error404.css" rel="stylesheet" />
+    <link href="~/css/ClearPDFFile.css" rel="stylesheet" />
+    <link href="~/css/caucolors.css" rel="stylesheet" />
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default-base.css">
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
+	<link rel="stylesheet" href="https://use.typekit.net/kbk6tcd.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" integrity="sha256-UK1EiopXIL+KVhfbFa8xrmAWPeBjMVdvYMYkTAEv/HI=" crossorigin="anonymous" />
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+
+    <!--BoxIcon-->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css' rel='stylesheet'>
+
+    <!--Font Style-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+    <script src="_content/BlazorStrap/blazorStrap.js"></script>
+</head>
+<body>
+    <app>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+    </app>
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/pdfJS/AlertMessageApp.js"></script>
+    <script src="~/jquery/jquery.min.js"></script>
+    <script src="~/pdfJS/PrintPDFt.js"></script>
+    <script src="~/pdfJS/SignaturePadCode.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script src="~/pdfJS/Login.js"></script>
+    <script src="~/pdfJS/ScrollEvent.js"></script>
+    <script src="~/pdfJS/User.js"></script>
+    <script src="~/pdfJS/errorApis.js"></script>
+    <script src="~/pdfJS/Error404.js"></script>
+    <script src="~/pdfJS/SendEmailMessage.js"></script>
+    <script src="~/pdfJS/SendEmailMessage.js"></script>
+    <script src="~/javascript/sweetalert.js"></script>
+    <script src="https://cdn.lordicon.com/xdjxvujz.js"></script>
+    <script src="~/pdfJS/DleteExpedientMessage.js"></script>
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script>
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha256-NXRS8qVcmZ3dOv3LziwznUHPegFhPZ1F/4inU7uC8h0=" crossorigin="anonymous"></script>
+</body>
+</html>

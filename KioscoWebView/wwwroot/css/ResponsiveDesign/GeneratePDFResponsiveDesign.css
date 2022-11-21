@@ -1,0 +1,61 @@
+﻿@media only screen and (max-device-width : 1000px) {
+   
+    .section-4-ipad {
+        border: 1px solid #000;
+        margin-top:2rem;
+    }
+    .section-6_column-1 div > input{
+    width:17rem;
+    border:none;
+    border-bottom:3px solid #000;
+    text-align:center;
+    background:none;
+    }
+    .section-6_column-1 div > input:focus{
+        width:17rem;
+        border:none;
+        border-bottom:3px solid #000;
+        background:none;
+        text-align:center;
+        outline:none;
+    }
+
+    .section-6_column-2 div > input{
+        width:17rem;
+        border:none;
+        border-bottom:3px solid #000;
+        background:none;
+        text-align:center;
+
+
+    }
+
+    .section-6_column-2 div > input:focus{
+        width:17rem;
+        border:none;
+        border-bottom:3px solid #000;
+        background:none;
+        outline:none;
+        text-align:center;
+    }
+
+
+    .firma-despacho, .firma-retorno {
+        width: 100%;
+        height: 15rem;
+    }
+    .firma-despacho >  img{
+        width:100%;
+        height:100%;
+    }
+
+    .firma-retorno > img{
+        width:100%;
+        height:100%;
+    }
+    
+}
+
+
+
+

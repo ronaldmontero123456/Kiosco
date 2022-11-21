@@ -12,6 +12,12 @@ builder.Services.AddDbContexts(builder.Configuration);
 builder.Services.AddServices();
 builder.Services.AddSwagger();
 
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

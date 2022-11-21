@@ -1,4 +1,5 @@
 ﻿using DPWorldDR.Shared.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace Kiosco.App.Utils
 {

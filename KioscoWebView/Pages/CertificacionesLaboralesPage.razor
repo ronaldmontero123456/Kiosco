@@ -1,0 +1,72 @@
+﻿@page "/CertificacionesLaborales"
+
+@using KioscoWebView.Data
+@using KioscoWebView.Services
+@using System.Reflection
+@using KioscoWebView.Utils
+@inject ICertificacionesLaboralesService _certificacionesLaboralesService;
+@inject NavigationManager NavigationManager;
+
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex flex-row align-items-center">
+            <RadzenImage Path="css/imgs/EncuestaIcon.png" Class="rz-border-radius-10 float-start me-3" Style="width: 50px; height: 40px;" />
+              <div class="d-flex bd-highlight">
+                   <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Certificaciones Laborales</p>
+              </div>
+            <button type="button" class="btn btn-sm float-end" title="Print">
+                <i class="bi bi-printer-fill"></i>
+            </button>
+        </div>      
+    </div>
+</div>
+
+  <RadzenImage Path="css/imgs/image.png" Class="rz-border-radius-10 float-start me-3" Style="width: 150px; height: 100px;" />
+
+<div class="cert-lab">
+    <h3>C E R T I F I C A C I Ó N</h3>
+
+<p>
+    Hacemos constar que el señor <strong>@FullName</strong>, portadora de la cédula de identidad y electoral no. @certificacionesLaborales.ADDRESS_LINE_1, labora en esta empresa desde 04 de julio del año 2017, desempeñándose en el cargo de Gerente Legal en el departamento Finanzas.
+	
+    el señor @FullName devenga un salario anual de la suma de <strong>RD$ ($@(certificacionesLaborales.EMPLOYEE_Money.ToString("N2") +" " + stringnumtotext))</strong> con beneficios incluidos.
+
+    Este documento ha sido emitido el día 28 de octubre de 2022, municipio de Boca Chica, Santo Domingo.
+	 	
+
+</p>
+
+
+<p>
+   <h6>Radhyvelka Villalona</h6>
+    Supervisora de Bienestar y Servicios
+</p>
+
+</div>
+
+
+      <div class="col-lg-2 p-3">
+          <RadzenButton Text="VOLVER" Click="@(args => Volver())" class="bg bg-blue-cau" />
+      </div>
+
+
+@code {
+
+    static string FullName = "";
+    static CertificacionesLaborales certificacionesLaborales = new();
+    static string stringnumtotext = "";
+    protected async override void OnInitialized()
+    {
+        certificacionesLaborales = await _certificacionesLaboralesService.GetCertificacionesLaboralesAsync();
+        FullName = certificacionesLaborales.EMP_NAME + " " + certificacionesLaborales.EMP_MIDDLE_NAME + " " + certificacionesLaborales.EMP_LAST_NAME + " " + certificacionesLaborales.EMP_MATERNAL_LAST;
+        stringnumtotext = Functions.NumberToText((int)certificacionesLaborales.EMPLOYEE_Money);
+
+        base.OnInitialized();
+    }
+
+    
+    void Volver()
+    {
+        NavigationManager.NavigateTo($"/Home");
+    }
+}

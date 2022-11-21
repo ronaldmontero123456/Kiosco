@@ -1,0 +1,129 @@
+﻿@page "/AddEncuestas"
+@using KioscoWebView.Data
+@using KioscoWebView.Services
+@inject IVacantesService VacantesService
+@inject IVacantesRequisitosService VacantesRequisitosService
+
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex flex-row align-items-center">
+            <RadzenImage Path="css/imgs/EncuestaIcon.png" Class="rz-border-radius-10 float-start me-3" Style="width: 50px; height: 40px;" />
+              <div class="d-flex bd-highlight">
+                    <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Agregar Encuestas </p>
+              </div>
+        </div>      
+    </div>
+</div>
+
+<section class="Representante crear">
+    <div class="container-fluid">
+    </div>
+        <form enctype="multipart/form-data" asp-controller="FiltrosPermiso" asp-action="Crear" novalidate="novalidate">
+            <fieldset>
+                <legend>Adding Forms:</legend>
+@*                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div asp-validation-summary="ModelOnly"></div>
+                    </div>
+                }*@
+                <div class="row">
+                    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+
+                    <div class="col-md-4">
+                        <label asp-for="FiltroId" class="control-label">Vacante ID</label>
+                        <input  class="form-control" type="number" @bind-value="Vacante.VacanteId">
+                    </div>
+@*
+                    <div class="col-md-4">
+                        <label asp-for="Type" class="control-label">Type</label>
+
+                        <RadzenDropDown Multiple="true" AllowClear="true" TValue="string" Class="w-100" 
+                        Data=@(customers.Select(c => c.CompanyName).Distinct())
+                        Change=@(args => OnChange(args, "DropDown")) />
+                    </div>*@
+
+                    <div class="col-md-4">
+                        <label asp-for="Origen" class="control-label">Titulo</label>
+                        <input asp-for="Origen" class="form-control" @bind-value="Vacante.Title">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrigenLabel" class="control-label">Proposito del Puesto</label>
+                        <input asp-for="Origen" class="form-control" @bind-value="Vacante.Descripcion">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrigenValue" class="control-label">Requisitos</label>
+                        <input asp-for="OrigenValue" class="form-control" @bind-value="Requisito">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="filOperadorDefecto" class="control-label">Fecha Inicio</label>
+                        <RadzenDatePicker style="width: 100%;" Name="OrderDate" @bind-Value="Vacante.FechaInicio" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="filOperadorDefecto" class="control-label">Fecha Fin</label>
+                        <RadzenDatePicker style="width: 100%;" Name="OrderDate" @bind-Value="Vacante.FechaFin" />
+                    </div>
+                </div>
+            </fieldset>
+            <a asp-action="Index" asp-controller="FiltrosPermiso" class="btn btn-danger btn-sm">Back</a>
+            <button class="btn btn-primary btn-sm" @onclick="@(() =>Crear())">Add</button>
+        </form>
+</section>
+
+
+<div style="overflow: scroll; height: 350px;">
+    <table class="table table-sm table-hover table-bordered mt-1">
+        <thead class="bg-blue-cau text-center">
+            <tr>                
+                <th scope="col">Requisitos</th>
+                <th scope="col"></th> 
+            </tr>
+        </thead>
+        <tbody>
+            @if (VacantesRequisito != null)
+            {
+                @foreach (var item in VacantesRequisito)
+                {
+                    <tr>
+                        <td>@item.Requisitos</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" @onclick="@(e => VacantesRequisito.Remove(VacantesRequisito.FirstOrDefault(d => d.VacantesRequisitosId == @item.VacantesRequisitosId)))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <button class="btn btn-primary btn-sm" @onclick="@(async() => await Save())">Save</button>
+</div>
+
+@code {
+
+    static List<VacantesRequisitos> VacantesRequisito = new();
+    static VacantesRequisitos VacanteRequisito = new();
+    string Requisito = "";
+
+    public static Vacantes Vacante = new();
+
+    private void Crear()
+    {
+
+        //dynamicForms.Fecha = DateTime.Now;
+        VacantesRequisito.Add(new VacantesRequisitos { Requisitos = Requisito});
+    }
+
+    private async Task Save()
+    {
+        //await DynamicFormsService.Add(DynamicsForms);
+        var result = await VacantesService.AddVacantesAsync(Vacante);
+        VacantesRequisito.ForEach(vr => vr.VacanteId = result.body);
+        await VacantesRequisitosService.AddVacantesRequisitosAsync(VacantesRequisito);
+        //DynamicsForms = new();
+    }
+
+    
+    private void SelectedDestinationChanged(ChangeEventArgs e)
+    {
+        //dynamicForms.DestinationValue = (string)e.Value;
+    }
+}

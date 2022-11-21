@@ -1,0 +1,76 @@
+﻿@page "/Encuentas"
+@using Kiosco.App.Data
+@using Kiosco.App.Services
+@inject IVacantesService VacantesService
+@inject NavigationManager NavigationManager;
+
+
+<div class="card mt-1">
+    <div class="card-body p-2 text-center">
+        <div class="d-flex flex-row align-items-center">
+            <RadzenImage Path="css/imgs/EncuestaIcon.png" Class="rz-border-radius-10 float-start me-3" Style="width: 50px; height: 40px;" />
+              <div class="d-flex bd-highlight">
+                   <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Vacantes</p>
+              </div>
+        </div>      
+    </div>
+</div>
+
+
+
+    
+<div style="overflow: scroll; height: 750px;">
+    <table class="table table-sm table-hover table-bordered mt-1">
+        <thead class="bg-blue-cau text-center">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">TITULO</th>
+                <th scope="col">DESCRIPCION</th>
+                <th scope="col">FECHA INICIO</th>
+                <th scope="col">FECHA FIN</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (VacantesList != null)
+            {
+                @foreach (var item in VacantesList)
+                {
+                    <tr>
+                        <td>@item.VacanteId</td>
+                        <td>@item.Title</td>
+                        <td>@item.Descripcion</td>
+                        <td>@item.FechaInicio</td>
+                        <td>@item.FechaFin</td>
+                        <td>
+                            <a href='/DynamicForms/AddDynamicForms/@item'>Edit</a> |
+                            <a href='/employee/delete'>Delete</a>|
+                            <a href='/employee/delete'>Aplicantes</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+            <div class="row justify-content-center">
+            <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                <RadzenButton ButtonType="ButtonType.Submit" class="bg bg-blue-cau" Icon="add" Text="Crear Encuestas" Click="@(args => CrearEncuestas())"/>
+            </div>
+        </div>
+</div>
+
+@code {
+    static List<Vacantes> VacantesList = new();
+
+    protected override async void OnInitialized()
+    {
+        var result = await VacantesService.GetVacantesAsync();
+        VacantesList = result.body.ToList();
+        base.OnInitialized();
+    }
+
+    void CrearEncuestas()
+    {
+        NavigationManager.NavigateTo($"/AddVacantes");
+    }
+}

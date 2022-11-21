@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+	  <IsShippingPackage>false</IsShippingPackage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="6.0.541" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DPWorldDR.Shared.Contracts">
+      <HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Contracts\DPWorldDR.Shared.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="DPWorldDR.Shared.Services.OracleServices">
+      <HintPath>..\..\..\..\Downloads\DPWorldDR.Shared.Services.OracleServices\DPWorldDR.Shared.Services.OracleServices.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+	<ItemGroup>
+		<Content Update="wwwroot\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Pages\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\KioscoWebView\KioscoWebView.csproj" />
+	</ItemGroup>
+
+</Project>

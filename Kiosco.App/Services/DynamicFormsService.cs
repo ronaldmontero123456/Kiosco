@@ -1,5 +1,5 @@
-﻿using DPWCMSApp.Services;
-using Kiosco.App.Data;
+﻿using Kiosco.App.Data;
+using Kiosco.Services;
 
 namespace Kiosco.App.Services
 {
@@ -17,12 +17,12 @@ namespace Kiosco.App.Services
         }
         public async Task Add(List<DynamicForms> dynamicForms)
         {
-             await _httpService.Post<WebResponse<List<DynamicForms>>>("api/DynamicForms", dynamicForms);
+            await _httpService.Post<WebResponse<List<DynamicForms>>>("api/DynamicForms", dynamicForms);
         }
 
         public async Task<WebResponse<List<DynamicForms>>> Get()
         {
-           return await _httpService.Get<WebResponse<List<DynamicForms>>>("api/DynamicForms");
+            return await _httpService.Get<WebResponse<List<DynamicForms>>>("api/DynamicForms");
         }
     }
 }

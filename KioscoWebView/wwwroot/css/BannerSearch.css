@@ -1,0 +1,87 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+.banner-search {
+    background: #D6EFED;
+    position: fixed;
+    top: 55px;
+    width: 100%;
+    display: flex;
+    /*justify-content: space-between;*/
+    justify-content:flex-end;
+    padding: 17px 15px;
+}
+    .banner-search div > button{
+        width:2rem;
+        height:2rem;
+        border-radius:1rem;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+.btn-despacho_retorno {
+    width:6rem;
+    padding-right:.7rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.banner-search div div > span {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    background: #D6DBDF;
+    border: 1px solid #D6DBDF;
+}
+
+.bx-search-alt {
+    font-size: 1.5rem;
+    text-shadow: 1px 2px 2px rgba(0,0,0,.2);
+    transition: all 1.5s;
+   
+}
+.bx-search-alt:hover {
+    
+    animation: search 1.5s infinite alternate linear;
+}
+
+.banner-search div div > input {
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    background: #D6DBDF;
+    border: 1px solid #D6DBDF;
+}
+
+    .banner-search div div > input:focus {
+        box-shadow: none;
+        color: #000;
+        border: 1px solid #D6DBDF;
+        background: #D6DBDF;
+    }
+
+
+
+    @keyframes search {
+        0%{
+        transform:rotate(100deg);
+    }
+}
+
+
+ 
+    /*search area*/
+.seaction-container{
+   
+    margin-top:1rem;
+    position:relative;
+    z-index:99;
+}
+
+    .seaction-container > section {
+        background:#D6DBDF;
+        margin-top: .5rem;
+        border-radius: .2rem;
+    }
+        .seaction-container > section:hover {
+            background: #99A3A4;
+        }

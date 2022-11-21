@@ -1,0 +1,143 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+
+
+    *:focus {
+        outline: none;
+    }
+
+
+
+html {
+    height: 100vh;
+}
+
+
+
+body {
+    font-family: "Pilat Wide Heavy", "Mier B", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: #1E1450;
+    background-image: url('imgs/bgCaucedo.PNG');
+    background-size: cover;
+    height: 97vh;
+}
+
+
+
+.login-screen {
+    margin: auto;
+    background-color: #FFF;
+    padding: 20px;
+    border-radius: 5px;
+    width: 340px;
+    position: relative;
+}
+
+
+
+@media screen and (max-width: 450px) {
+    .login-screen {
+        width: 280px;
+        height: 100%;
+    }
+}
+
+
+
+.app-title {
+    text-align: center;
+    color: #3E3C90;
+    font-family: "Pilat Wide Heavy", "Mier B", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+
+
+.login-form {
+    text-align: center;
+}
+
+
+
+.control-group {
+    margin-bottom: 10px;
+}
+
+
+
+input {
+    text-align: center;
+    background-color: #fff;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: bold;
+    font-weight: 200;
+    padding: 10px 0;
+    width: 90%;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #1E1450;
+    transition: border .5s;
+}
+
+
+
+    input:focus {
+        border-bottom: 1px solid #1E1450;
+        box-shadow: none;
+        border-top: none;
+        border-right: none;
+        border-left: none;
+    }
+
+
+
+.btn {
+    border: 2px solid transparent;
+    background: #FFF;
+    color: #3E3C90;
+    font-size: 16px;
+    line-height: 25px;
+    padding: 10px 0;
+    text-decoration: none;
+    text-shadow: none;
+    border-radius: 15px;
+    border: 1px solid #1E1450;
+    box-shadow: none;
+    transition: 0.25s;
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+}
+
+
+
+    .btn:hover {
+        background-color: #3E3C90;
+    }
+
+
+
+    .btn:active {
+        background-color: #3E3C90;
+    }
+
+
+
+.login-link {
+    font-size: 12px;
+    color: #444;
+    display: block;
+    margin-top: 12px;
+}
+
+
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

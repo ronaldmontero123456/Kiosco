@@ -13,12 +13,12 @@ namespace Kiosco.Infrastructure.Extensions
         public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<KioscoContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnection")));
+            services.AddDbContext<KioscoDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnectionKioco")));
             return services;
         }
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             return services;
         }

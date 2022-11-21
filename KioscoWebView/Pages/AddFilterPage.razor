@@ -1,0 +1,85 @@
+﻿@page "/FiltrosPermiso/AddFilterPage/{empId}"
+
+<header class="page-header">
+    <h2>Add Filter</h2>
+    <!-- Breadcrumb-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Filtro Permiso</a></li>
+        <li class="breadcrumb-item active"> Add Filter</li>
+    </ol>
+</header>
+
+<section class="Representante crear">
+    <div class="container-fluid">
+    </div>
+        <form method="post" enctype="multipart/form-data" asp-controller="FiltrosPermiso" asp-action="Crear" novalidate="novalidate">
+            <fieldset>
+                <legend>Creando Filtro:</legend>
+@*                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div asp-validation-summary="ModelOnly"></div>
+                    </div>
+                }*@
+                <div class="row">
+                    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+
+                    <div class="col-md-4">
+                        <label asp-for="FiltroId" class="control-label">ID</label>
+                        <input asp-for="FiltroId" class="form-control" type="number" value="@filtroId" disabled>
+                    </div>
+
+                    <div class="col-md-4">
+                        <span asp-validation-for="Label" class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <span asp-validation-for="Campo" class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Tipo" class="control-label">Tipo</label>
+                        <select asp-for="Tipo" class="form-control" asp-items="ViewBag.Tipos"></select>
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Origen" class="control-label">Origen</label>
+                        <input asp-for="Origen" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrigenLabel" class="control-label">OrigenLabel</label>
+                        <input asp-for="OrigenLabel" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="OrigenValue" class="control-label">OrigenValue</label>
+                        <input asp-for="OrigenValue" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="filOperadorDefecto" class="control-label">Operador</label>
+                        <select class="form-control">
+                            <option value="contains">Contiene</option>
+                            <option value="=">Es igual</option>
+                            <option value=">">Mayor que</option>
+                            <option value=">=">Mayor o igual que</option>
+                            <option value="<">Menor que</option>
+                            <option value="<=">Menor o igual que</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <a asp-action="Index" asp-controller="FiltrosPermiso" class="btn btn-danger btn-sm">Volver</a>
+            <button type="submit" class="btn btn-primary btn-sm">Crear</button>
+        </form>
+</section>
+
+@code {
+        
+    [Parameter]
+    public string empId { get; set; }
+
+    int filtroId;
+}

@@ -1,0 +1,155 @@
+﻿@page "/FiltrosPermiso"
+
+    <header class="page-header">
+        <h2>Filtros Permiso</h2>
+        <!-- Breadcrumb-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="">Inicio</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Configuración</a></li>
+            <li class="breadcrumb-item active">Filtros Permiso</li>
+            <li class="controls">
+                @*<div class="dropdown" style="margin-left: 5px;">
+                        <button class="btn dropdown-toggle" type="button" id="dpReportes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-sliders" aria-hidden="true"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dpReportes">
+                            <a class="dropdown-item" href="#">Reporte de Presupuestos</a>
+                        </div>
+                    </div>*@
+@*                <div style="padding-right:10px;">
+                    <a class="btn" asp-action="Crear">Crear</a>
+                </div>*@
+            </li>
+        </ol>
+    </header>
+
+    
+<div style="overflow: scroll; height: 350px;">
+    <table class="table table-sm table-hover table-bordered mt-1">
+        <thead class="bg-blue-cau text-center">
+            <tr>
+                <th scope="col">Tabla</th>
+                <th scope="col">ExpiryDate</th>
+                <th scope="col">Module</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (order != null)
+            {
+                @foreach (var item in order)
+                {
+                    <tr>
+                        <td>@item.Tabla</td>
+                        <th class="text-nowrap">@item.ExpiryDate.ToString("yyyy-MM-dd")</th>
+                        <td>@item.Module</td>
+                        <td>
+                            <a href='/FiltrosPermiso/AddFilterPage/@item.CardId'>Edit</a>  |
+                            <a href='/employee/delete/@item.CardId'>Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    public class Order
+    {
+        public int CardId { get; set; }
+        public string CardNr { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public string CardHolder { get; set; }
+        public string Name { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public int Country { get; set; }
+        public int StoreId { get; set; }
+        public string Warehouse { get; set; }
+        public string Region { get; set; }
+        public string System { get; set; }
+        public int TransId { get; set; }
+        public string Register { get; set; }
+        public string Clerk { get; set; }
+        public string Tabla { get; set; }
+        public string Module { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Tax { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime ShipDate { get; set; }
+    }
+
+    public class CreditCard
+    {
+        public int CardId { get; set; }
+        public string CardNr { get; set; }
+    }
+
+    public class Country
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    List<Order> order = new List<Order>() 
+    { 
+        new Order()
+        {
+            ExpiryDate = DateTime.Parse("10/10/2022"),
+            OrderDate = DateTime.Now,
+            ShipDate = DateTime.Now,
+            Tabla = "Cursos",
+            Module = "Cursos",
+        },
+        new Order()
+        {
+            ExpiryDate = DateTime.Parse("10/10/2022"),
+            OrderDate = DateTime.Now,
+            ShipDate = DateTime.Now,
+            Tabla = "Encuestas",
+            Module = "Encuestas Externas",
+        },
+        new Order()
+        {
+            ExpiryDate = DateTime.Parse("10/10/2022"),
+            OrderDate = DateTime.Now,
+            ShipDate = DateTime.Now,
+            Tabla = "Vacantes",
+            Module = "Vacantes Externas",
+        },
+        new Order()
+        {
+            ExpiryDate = DateTime.Parse("10/10/2022"),
+            OrderDate = DateTime.Now,
+            ShipDate = DateTime.Now,
+            Tabla = "Vacantes",
+            Module = "Vacantes Internas",
+        },
+    };
+
+    List<CreditCard> cards = new List<CreditCard>()
+    {
+        new CreditCard() { CardId = 1, CardNr = "5555555555554444" },
+        new CreditCard() { CardId = 2, CardNr = "4012888888881881" }
+    };
+
+    List<Country> countries = new List<Country>()
+{
+        new Country() { Id = 1, Name = "USA" },
+        new Country() { Id = 2, Name = "Germany" }
+    };
+
+    void Submit(Order arg)
+    {
+        //
+    }
+
+    void Cancel()
+    {
+        //
+    }
+}

@@ -1,41 +1,37 @@
 ﻿@page "/ResumenHorasExtras"
 @using System.IO
+@using DPWCMSApp.Services
 @using Kiosco.App.Data
 @using Kiosco.App.Data.DTO
 @using Kiosco.App.Data.Enums
 @using Kiosco.App.Services
 @inject ITblResumenHorasService ResumenHorasService;
+@inject ILocalStorageService localStorage;
+@inject NavigationManager NavigationManager;
 
 <div class="card mt-1">
     <div class="card-body p-2 text-center">
-        <div class="d-flex bd-highlight">
-            <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Resumen De Horas Extras</p>
-        </div>
+        <div class="d-flex flex-row align-items-center">
+            <RadzenImage Path="css/imgs/Calendar.png" Class="rz-border-radius-10 float-start me-3" Style="width: 50px; height: 40px;" />
+              <div class="d-flex bd-highlight">
+                  <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Resumen De Horas Extras</p>
+              </div>
+        </div>      
     </div>
 </div>
+
+  <RadzenImage Path="css/imgs/image.png" Class="rz-border-radius-10 float-start me-3" Style="width: 150px; height: 100px;" />
 
 <div class="card mt-1">
     
     <div class="card-footer text-muted">
         <div class="d-flex justify-content-lg-between">
             <div class="">
-                <button type="button"  @onclick="@(async() => await QPas())"> @*@onclick="ClearFields">*@
-                    <i class="bi bi-arrow-left"></i>
-                    Quincena Pasada                    
+                <button type="button" @onclick="@(async() => await QPas())"> @*@onclick="ClearFields">*@
+                    <img src="css/imgs/icons8-izquierda.png" width="50" height="50">       
                 </button>
                 <button type="button" @onclick="@(async() => await QProx())"> @*@onclick="Search">*@
-                    Quincena Proxima
-                    @if (BtnLoading)
-                    {
-                        <div class="spinner-border spinner-border-sm" role="status">
-                            <span class="visually-hidden"></span>
-                        </div>
-                    }
-                    else
-                    {
-                        <i class="bi bi-arrow-right"></i>
-                    }
-
+                    <img src="css/imgs/icons8-derecha.png" width="50" height="50">  
                 </button>
             </div>
             <div class="flex-grow-1">
@@ -93,6 +89,7 @@
                 <th scope="col">DEPARTMENT</th>
                 <th scope="col">SUBDEPARTMENT</th>
                 <th scope="col">WORKEDHOURS</th>
+                <th scope="col">VACATIONDAYS</th>
             </tr>
         </thead>
         <tbody>
@@ -109,6 +106,7 @@
                         <td>@item.department</td>
                         <td>@item.subDepartment</td>
                         <td>@item.workedHours</td>
+                        <td>@item.vactionDays</td>
                     </tr>
                 }
             }
@@ -135,6 +133,11 @@
         </tbody>
     </table>
 </div>
+
+      <div class="col-lg-2 p-3">
+          <RadzenButton Text="VOLVER" Click="@(args => Volver())" class="bg bg-blue-cau" />
+      </div>
+
 
 
 @code {
@@ -234,7 +237,8 @@
             {
                 if (WebResponseItemDTO is not null)
                 {
-                    ItemDTOs = WebResponseItemDTO.Where(w => w.employeeNumber == "CAU565").ToList();
+                    string carnetCode = await localStorage.GetItem<string>("CarnetCode");
+                    ItemDTOs = WebResponseItemDTO.Where(w => w.employeeNumber == carnetCode).ToList();
                     display = "d-none";
                     message = "";
                     alertClass = "";
@@ -325,6 +329,11 @@
             PlaceHolder = false;
         }
 
+    }
+    
+    void Volver()
+    {
+        NavigationManager.NavigateTo($"/home");
     }
 
 }
