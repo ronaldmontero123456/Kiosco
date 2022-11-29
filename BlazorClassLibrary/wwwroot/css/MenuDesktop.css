@@ -1,0 +1,44 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+
+/*variables*/
+:root {
+    --text-color: #eee;
+}
+
+/*menu desktopo style*/
+nav {
+    background: #001E6C;
+}
+.title-container {
+   
+}
+.bi-list {
+    color: #eee;
+}
+
+.contenedor {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.contenedor > div a {
+    text-shadow: 0 0 1px rgba(0,0,0,.4);
+    color: var(--text-color);
+}
+
+.contenedor > button:focus {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    text-shadow: 0 0 3px rgba(0,0,0,.4);
+}
+
+
+.ul-container > ul{
+    display:flex;
+}
+.ul-container ul > li{
+    list-style:none;
+}

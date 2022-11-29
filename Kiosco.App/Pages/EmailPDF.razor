@@ -1,0 +1,1486 @@
+﻿@page "/PDF"
+
+@using System.IO;
+@using iTextSharp.text;
+@using iTextSharp.text.pdf;
+@inject IJSRuntime JS;
+@using System.Text.Json;
+
+
+@code{     
+    DateTime localDate = DateTime.Now;
+    //all attribute
+    public string noExpediente { get; set; }
+    public DateTime fechaDespacho { get; set; }
+    
+    public DateTime fechaRetorno { get; set; }
+    
+    public string noContenedor { get; set; }
+    
+    public string cliente { get; set; }
+    
+    public string direccion { get; set; }
+    
+    public string ciudad { get; set; }
+    
+    public string pais { get; set; }
+    
+    public string rnttCamionDespacho { get; set; }
+    
+    public string telTransporteDespacho { get; set; }
+    
+    public string nombreConductorDespacho { get; set; }
+    
+    public string cedulaConductorDespacho { get; set; }
+    
+    public string placaCamionDespacho { get; set; }
+    
+    public string rnttCamionRetorn { get; set; }
+    
+    public string telTransportCamionRetorno { get; set; }
+    
+    public string nombreConductorRetorno { get; set; }
+    
+    public string cedulaCamionRetorn { get; set; }
+    
+    public string placaCamionRetorno { get; set; }
+    
+    public string noEquipoAlquiler { get; set; }
+    
+    public string tipoPiesChasi { get; set; }
+    
+    public string tipoPiesContenedor { get; set; }
+    
+    public string IAE { get; set; }
+    
+    public string genSet { get; set; }
+    
+    public string tempVentSalida { get; set; }
+    
+    public string tempVenSalidaCF { get; set; }
+    
+    public string tempVentRetorno { get; set; }
+    
+    public string tempVenRetornoCF { get; set; }
+    
+    public string combustibleTanqueDespacho { get; set; }
+    
+    public string combustibleTanqueRetorno { get; set; }
+
+    
+    public string bien { get; set; }
+    
+    public string patas { get; set; }
+    
+    public string tapas { get; set; }
+    
+    public string barrasTensoras { get; set; }
+    
+    public string manigueta { get; set; }
+
+    
+    public string esparragos { get; set; }
+    
+    public string tuercas { get; set; }
+    
+    public string unas { get; set; }
+    
+    public string tapaPuntadeEje { get; set; }
+    
+    public string separadores { get; set; }
+
+
+    
+    public string tanqueRecibidorDeAire { get; set; }
+    
+    public string chicharra { get; set; }
+    
+    public string pulmones { get; set; }
+    
+    public string mangueraDeAire { get; set; }
+    
+    public string muellas { get; set; }
+    
+    public string balencines { get; set; }
+
+
+    
+    public string cotorras { get; set; }
+    
+    public string ramalElectrico { get; set; }
+    
+    public string luces { get; set; }
+    
+    public string plug { get; set; }
+    
+    public string twistLock { get; set; }
+    
+    public string defensas { get; set; }
+
+    
+    public string observacionDeLaEvaluacion { get; set; }
+    
+    public string entregaPorLogistic { get; set; }
+    
+    public string recibidoPorChofer { get; set; }
+    
+    public string entregadoPorLogiticRetorno { get; set; }
+    
+    public string recibidoPorChoferRetorno { get; set; }
+    
+    public string imgDespacho { get; set; }
+    
+    public string imgRetorno { get; set; }
+    
+    public string statusDispatch { get; set; }
+    
+    public string statusReturn { get; set; }
+    
+    public string outOfServices { get; set; }
+    
+    public string IsInternalTransaction { get; set; }
+
+    private bool loading;
+
+
+
+    string path ;
+    string urlPdf;
+
+    string rutaImgLogo;
+    string rutaImgCheck;
+    string rutaImgUnCheck;
+
+    protected override void OnInitialized()
+    {
+        //urlPdf = _config.GetValue<string>("ApisURL:PDFPath");
+        //path = Path.GetFullPath($@"\{urlPdf}");
+
+
+        //rutaImgLogo = _config.GetValue<string>("ApisURL:DpWorldLogoImg");
+        //rutaImgCheck = _config.GetValue<string>("ApisURL:ImgCheckPath");
+        //rutaImgUnCheck = _config.GetValue<string>("ApisURL:ImgUnCheckPath");
+
+        System.Diagnostics.Debug.Print(outOfServices);
+        JS.InvokeVoidAsync("getscroll");
+
+    }
+    string _email = "Bradigson.Nunez@dpworld.com.do";
+    const string emailKey = "email";
+    string retorno = "REOTNRO";
+    string despacho = "DESPACHO";
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            StateHasChanged();
+
+
+            if(statusReturn == "" || statusReturn == null)
+            {
+                try
+                {
+                    Document doc = new Document(PageSize.LEGAL);
+                    //FileStream file = new FileStream($"12/({despacho}).pdf", FileMode.Create);
+                    //PdfWriter writer = PdfWriter.GetInstance(doc, file);
+
+                    doc.AddAuthor("DPWORLD");
+                    doc.AddTitle("C E R T I F I C A C I Ó N");
+                    doc.Open();
+
+
+                    BaseFont _title = BaseFont.CreateFont(BaseFont.COURIER, BaseFont.CP1250, true);
+                    iTextSharp.text.Font titulo = new iTextSharp.text.Font(_title, 16f, iTextSharp.text.Font.BOLD, new BaseColor(0, 0, 0));
+                    iTextSharp.text.Font negrita = new iTextSharp.text.Font(_title, 11f, iTextSharp.text.Font.BOLD, new BaseColor(0, 0, 0));
+                    iTextSharp.text.Font tituloTabla = new iTextSharp.text.Font(_title, 12f, iTextSharp.text.Font.BOLD, new BaseColor(0, 0, 0));
+
+
+                    BaseFont _titleNoNegrita = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1250, true);
+                    iTextSharp.text.Font noNegrita = new iTextSharp.text.Font(_title, 8f, iTextSharp.text.Font.BOLD, new BaseColor(0, 0, 0));
+
+                    BaseFont _parrafo = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1250, true);
+                    iTextSharp.text.Font parrafo = new iTextSharp.text.Font(_parrafo, 11f, iTextSharp.text.Font.NORMAL, new BaseColor(0, 0, 0));
+                    iTextSharp.text.Font footer = new iTextSharp.text.Font(_parrafo, 8f, iTextSharp.text.Font.NORMAL, new BaseColor(0, 0, 0));
+
+                    BaseFont _parrafoFirstTable = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1250, true);
+                    iTextSharp.text.Font parrafoTableFirst = new iTextSharp.text.Font(_parrafo, 11f, iTextSharp.text.Font.NORMAL, new BaseColor(0, 0, 0));
+
+                    BaseFont _parrafoOutOfService = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1250, true);
+                    iTextSharp.text.Font parrafoOutOfService = new iTextSharp.text.Font(_parrafoOutOfService, 11f, iTextSharp.text.Font.NORMAL, new BaseColor(192, 57, 43));
+
+                    BaseFont _parraIsInternalTransaction = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1250, true);
+                    iTextSharp.text.Font parraIsInternalTransaction = new iTextSharp.text.Font(_parraIsInternalTransaction, 11f, iTextSharp.text.Font.NORMAL, new BaseColor(52, 152, 219));
+
+
+                    iTextSharp.text.Font tituloOne = new iTextSharp.text.Font(_title, 12f, iTextSharp.text.Font.BOLD, new BaseColor(0, 0, 0));
+
+
+                    doc.Add(Chunk.NEWLINE);
+
+                    string imgURL = $@"C:{rutaImgLogo}";
+                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imgURL);
+                    float ancho = logo.Width;
+                    float alto = logo.Height;
+                    float proporcion = alto / ancho;
+
+                    logo.ScaleAbsoluteWidth(70);
+                    logo.ScaleAbsoluteHeight(70 * proporcion);
+
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    var table = new PdfPTable(new float[] { 50f }) { WidthPercentage = 100 };
+                    table.AddCell(new PdfPCell(logo) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                    doc.Add(table);
+
+                    doc.Add(Chunk.NEWLINE);
+
+                    var tituloPDF = new Paragraph("CONDUCE RENTA DE EQUIPOS", titulo);
+                    tituloPDF.Alignment = Element.ALIGN_CENTER;
+                    doc.Add(tituloPDF);
+
+                    doc.Add(Chunk.NEWLINE);
+
+                    if (statusReturn == "Retornado" || statusReturn != null)
+                    {
+                        var subTituloPDF = new Paragraph("RETORNO", parrafo);
+                        subTituloPDF.Alignment = Element.ALIGN_CENTER;
+                        doc.Add(subTituloPDF);
+                    }
+                    else
+                    {
+                        var subTituloPDF = new Paragraph("DESPACHO", parrafo);
+                        subTituloPDF.Alignment = Element.ALIGN_CENTER;
+                        doc.Add(subTituloPDF);
+
+                    }
+
+                    if (IsInternalTransaction == "true")
+                    {
+                        var subTituloPDFChassisOutService = new Paragraph("Transacción Interna", parraIsInternalTransaction);
+                        subTituloPDFChassisOutService.Alignment = Element.ALIGN_CENTER;
+                        doc.Add(subTituloPDFChassisOutService);
+
+                    }
+
+
+
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    var tableFirst = new PdfPTable(new float[] { 35f, 20f, 50f }) { WidthPercentage = 100 };
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"No. EXPEDIENTE : {noExpediente} ", parrafoTableFirst)));
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"CLIENTE : {cliente} ", parrafoTableFirst)));
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"RNTT # CAMION DESPACHO : {rnttCamionDespacho}", parrafoTableFirst)));
+
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"FECHA DESPACHO :{fechaDespacho.ToShortDateString()} {fechaDespacho.ToShortTimeString()}", parrafoTableFirst)));
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"DIRECCION : {direccion}", parrafoTableFirst)));
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"TEL TRANSPORTISTE DESPACHO : {telTransporteDespacho}", parrafoTableFirst)));
+
+                    if (statusReturn != null || statusReturn == "Retornado")
+                    {
+                        tableFirst.AddCell(new PdfPCell(new Phrase($"FECHA RETORNO : {fechaRetorno.ToShortDateString()} {fechaRetorno.ToShortTimeString()}", parrafoTableFirst)));
+                    }
+                    else
+                    {
+                        tableFirst.AddCell(new PdfPCell(new Phrase("FECHA RETORNO:", parrafoTableFirst)));
+
+                    }
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"CIUDAD : {ciudad}", parrafoTableFirst)));
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"NOMBRE CONDUCTOR DESPACHO : {nombreConductorDespacho}", parrafoTableFirst)));
+
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"No. CONTENEDOR : {noContenedor}", parrafoTableFirst)));
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"PAIS : {pais}", parrafoTableFirst)));
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"CEDULA CONDUCTOS DESPACHO : {cedulaConductorDespacho}", parrafoTableFirst)));
+
+                    tableFirst.AddCell(new PdfPCell(new Phrase(" ", parrafoTableFirst)));
+                    tableFirst.AddCell(new PdfPCell(new Phrase("  ", parrafoTableFirst)));
+                    tableFirst.AddCell(new PdfPCell(new Phrase($"PLACA CAMION DESPACHO : {placaCamionDespacho}", parrafoTableFirst)));
+
+                    doc.Add(tableFirst);
+
+
+                    doc.Add(Chunk.NEWLINE);
+
+                    var tableThird = new PdfPTable(new float[] { 50f, 35f, 45f }) { WidthPercentage = 100 };
+                    tableThird.AddCell(new PdfPCell(new Phrase($"RNTT # CAMION RETORNO : {rnttCamionRetorn}", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($"No. EQUIPO (alquiler) : {noEquipoAlquiler} ", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($" GEN-SET : {genSet}", parrafoTableFirst)));
+
+                    tableThird.AddCell(new PdfPCell(new Phrase($"TEL TRANSPORTISTA RETORNO : {telTransportCamionRetorno}", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($"TIPOS (pies) Chassis : {tipoPiesChasi} ", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($" TEMP/VENT SALIDA : {tempVentSalida} {tempVenSalidaCF}", parrafoTableFirst)));
+
+                    tableThird.AddCell(new PdfPCell(new Phrase($"NOMBRE CONDUCTOR RETORNO : {nombreConductorRetorno}", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($" TIPOS (pies) Contenedor : {tipoPiesContenedor}", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($"TEMP/VENT RETORNO:  {tempVenRetornoCF}", parrafoTableFirst)));
+
+                    tableThird.AddCell(new PdfPCell(new Phrase($"CEDULA CONDUCTOS RETORNO : {cedulaCamionRetorn}", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($" No.Contenedor : {noContenedor}", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($" COMBUSTIBLE EN TANQUE DESPACHO : {combustibleTanqueDespacho}", parrafoTableFirst)));
+
+                    tableThird.AddCell(new PdfPCell(new Phrase($"PLACA CAMION RETORNO : {placaCamionRetorno}", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($" I/E/A : {IAE}", parrafoTableFirst)));
+                    tableThird.AddCell(new PdfPCell(new Phrase($" COMBUSTIBLE EN TANQUE RETORNO: {combustibleTanqueRetorno}", parrafoTableFirst)));
+
+                    doc.Add(tableThird);
+
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    string imgCheck = $@"C:{rutaImgCheck}";
+                    iTextSharp.text.Image check = iTextSharp.text.Image.GetInstance(imgCheck);
+                    check.ScaleAbsoluteWidth(5);
+                    check.ScaleAbsoluteHeight(5);
+                    check.ScaleAbsolute(10, 10);
+
+                    string imgNoSelect = $@"C:{rutaImgUnCheck}";
+                    iTextSharp.text.Image noSelect = iTextSharp.text.Image.GetInstance(imgNoSelect);
+                    noSelect.ScaleAbsoluteWidth(15);
+                    noSelect.ScaleAbsoluteHeight(15);
+                    noSelect.ScaleAbsolute(18, 18);
+
+                    //first one
+
+                    var tableGoma = new PdfPTable(new float[] { 50f, 50f, 50f }) { WidthPercentage = 100 };
+                    tableGoma.AddCell(new PdfPCell(new Phrase("GOMAS", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    tableGoma.AddCell(new PdfPCell(new Phrase("S", tituloTabla)) { HorizontalAlignment = Element.ALIGN_CENTER,BackgroundColor = new BaseColor(213, 216, 220) });
+                    tableGoma.AddCell(new PdfPCell(new Phrase("R", tituloTabla)) { HorizontalAlignment = Element.ALIGN_CENTER,BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    tableGoma.AddCell(new PdfPCell(new Phrase("Bien", tituloTabla)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (bien == "Bien" || bien == "Bine/Bien" || bien == "Bien/Mal")
+                    {
+                        tableGoma.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else if (bien == "Bien/Bien" || bien == "Bien/")
+                    {
+                        tableGoma.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else if (bien == "Mal" || bien == "Mal/Mal" || bien == "Mal/Bien" || bien == "Mal/")
+                    {
+                        tableGoma.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+
+                    if (bien == "Bien/Bien")
+                    {
+                        tableGoma.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableGoma.AddCell(new PdfPCell(new Phrase("", tituloTabla)) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+
+                    tableGoma.AddCell(new PdfPCell(new Phrase("Mal", tituloTabla)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    tableGoma.AddCell(new PdfPCell(new Phrase("", tituloTabla)) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (bien == "Mal" || bien == "Mal/Mal" || bien == "Bien/Mal")
+                    {
+                        tableGoma.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableGoma.AddCell(new PdfPCell(new Phrase("", tituloTabla)) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+
+
+
+                    doc.Add(tableGoma);
+
+
+
+
+
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    var tableTren = new PdfPTable(new float[] { 50f, 25f, 25f }) { WidthPercentage = 100 };
+                    tableTren.AddCell(new PdfPCell(new Phrase("TREN", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    tableTren.AddCell(new PdfPCell(new Phrase("S", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220), HorizontalAlignment = Element.ALIGN_CENTER });
+                    tableTren.AddCell(new PdfPCell(new Phrase("R", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220), HorizontalAlignment = Element.ALIGN_CENTER });
+
+                    //patas
+                    tableTren.AddCell(new PdfPCell(new Phrase("Patas", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (patas == "S" || patas == "S/R" || patas == "S/unSelect")
+                    {
+                        tableTren.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableTren.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+                    if (patas == "S/R")
+                    {
+                        tableTren.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (patas == "S/unSelect")
+                    {
+                        tableTren.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableTren.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    //tapas
+                    tableTren.AddCell(new PdfPCell(new Phrase("Tapas", parrafo)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    if (tapas == "S" || tapas == "S/R" || tapas == "S/unSelect")
+                    {
+                        tableTren.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableTren.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    if (tapas == "S/R")
+                    {
+                        tableTren.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else if (tapas == "S/unSelect")
+                    {
+                        tableTren.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    }
+                    else
+                    {
+                        tableTren.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+
+                    //Barras Tensoras
+                    tableTren.AddCell(new PdfPCell(new Phrase("Barras Tensoras", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (barrasTensoras == "S" || barrasTensoras == "S/R" || barrasTensoras == "S/unSelect")
+                    {
+                        tableTren.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableTren.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+                    if (barrasTensoras == "S/R")
+                    {
+                        tableTren.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (barrasTensoras == "S/unSelect")
+                    {
+                        tableTren.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableTren.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+
+
+                    //Manigueta
+                    tableTren.AddCell(new PdfPCell(new Phrase("Manigueta", parrafo)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    if (manigueta == "S" || manigueta == "S/R" || manigueta == "S/unSelect")
+                    {
+                        tableTren.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableTren.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    if (manigueta == "S/R")
+                    {
+                        tableTren.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else if (manigueta == "S/unSelect")
+                    {
+                        tableTren.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    }
+                    else
+                    {
+                        tableTren.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+                    doc.Add(tableTren);
+
+
+                    //Traccion
+                    doc.Add(Chunk.NEWLINE);
+
+                    var tableTraccion = new PdfPTable(new float[] { 50f, 25f, 25f }) { WidthPercentage = 100 };
+                    tableTraccion.AddCell(new PdfPCell(new Phrase("TRACCION", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    tableTraccion.AddCell(new PdfPCell(new Phrase("S", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220), HorizontalAlignment = Element.ALIGN_CENTER });
+                    tableTraccion.AddCell(new PdfPCell(new Phrase("R", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220), HorizontalAlignment = Element.ALIGN_CENTER });
+
+                    //Esparragos
+                    tableTraccion.AddCell(new PdfPCell(new Phrase("Esparragos", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (esparragos == "S" || esparragos == "S/R" || esparragos == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    if (esparragos == "S/R")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (esparragos == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+
+
+                    //Tuercas
+                    tableTraccion.AddCell(new PdfPCell(new Phrase("Tuercas", parrafo)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    if (tuercas == "S" || tuercas == "S/R" || tuercas == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    if (tuercas == "S/R")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    }
+                    else if (tuercas == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+
+                    // Uñas
+                    tableTraccion.AddCell(new PdfPCell(new Phrase("Uñas", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (unas == "S" || unas == "S/R" || unas == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    if (unas == "S/R")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (unas == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+
+
+                    //Tapa punta de eje
+                    tableTraccion.AddCell(new PdfPCell(new Phrase("Tapa Punta de Eje", parrafo)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    if (tapaPuntadeEje == "S" || tapaPuntadeEje == "S/R" || tapaPuntadeEje == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    if (tapaPuntadeEje == "S/R")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else if (tapaPuntadeEje == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    // Separadores
+                    tableTraccion.AddCell(new PdfPCell(new Phrase("Separadores", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (separadores == "S" || separadores == "S/R" || separadores == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    if (separadores == "S/R")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (separadores == "S/unSelect")
+                    {
+                        tableTraccion.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableTraccion.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+                    doc.Add(tableTraccion);
+
+
+
+
+
+                    //Frenos y Suspenciones
+                    doc.Add(Chunk.NEWLINE);
+
+                    var tableFrenosYSuspenciones = new PdfPTable(new float[] { 50f, 25f, 25f }) { WidthPercentage = 100 };
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("FRENOS Y SUSPENCION", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("S", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220), HorizontalAlignment = Element.ALIGN_CENTER });
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("R", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220), HorizontalAlignment = Element.ALIGN_CENTER });
+
+                    //Tanque recibidor aire
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("Tanque recibidor aire", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (tanqueRecibidorDeAire == "S" || tanqueRecibidorDeAire == "S/R" || tanqueRecibidorDeAire == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    if (tanqueRecibidorDeAire == "S/R")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (tanqueRecibidorDeAire == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+
+
+
+
+                    //Chicharron
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("Chicharras", parrafo)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    if (chicharra == "S" || chicharra == "S/R" || chicharra == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    if (chicharra == "S/R")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else if (chicharra == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+
+
+                    //Pulmones
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("Pulmones", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (pulmones == "S" || pulmones == "S/R" || pulmones == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+
+                    if (pulmones == "S/R")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (pulmones == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+
+
+
+                    //Manguera de aire
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("Manguera de aire", parrafo)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    if (mangueraDeAire == "S" || mangueraDeAire == "S/R" || mangueraDeAire == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    if (mangueraDeAire == "S/R")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else if (mangueraDeAire == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+
+                    //Muellas
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("Muellas", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (muellas == "S" || muellas == "S/R" || muellas == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    if (muellas == "S/R")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (muellas == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+
+
+
+                    //Balencines
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("Balencines", parrafo)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    if (balencines == "S" || balencines == "S/R" || balencines == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    if (balencines == "S/R")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else if (balencines == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+
+                    //Cotorras
+                    tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("Cotorras", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (cotorras == "S" || cotorras == "S/R" || cotorras == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    if (cotorras == "S/R")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (cotorras == "S/unSelect")
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableFrenosYSuspenciones.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+                    doc.Add(tableFrenosYSuspenciones);
+
+
+
+                    //Sistema Electrico
+                    doc.Add(Chunk.NEWLINE);
+
+                    var tableSistemaElecrtrico = new PdfPTable(new float[] { 50f, 25f, 25f }) { WidthPercentage = 100 };
+                    tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("Sistema Electrico", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("S", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220), HorizontalAlignment = Element.ALIGN_CENTER });
+                    tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("R", tituloTabla)) { BackgroundColor = new BaseColor(213, 216, 220), HorizontalAlignment = Element.ALIGN_CENTER });
+
+                    //Ramal Electrico
+                    tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("Ramal Electricoe", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (ramalElectrico == "S" || ramalElectrico == "S/R" || ramalElectrico == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    if (ramalElectrico == "S/R")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (ramalElectrico == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+
+
+                    //Luces
+                    tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("Luces", parrafo)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    if (luces == "S" || luces == "S/R" || luces == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    if (luces == "S/R")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else if (luces == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+
+
+                    //Plug
+                    tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("Plug", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (plug == "S" || plug == "S/R" || plug == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    if (plug == "S/R")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (plug == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+
+
+
+                    //Twist Lock
+                    tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("Twist Lock", parrafo)) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    if (twistLock == "S" || twistLock == "S/R" || twistLock == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+                    if (twistLock == "S/R")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+                    else if (twistLock == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(213, 216, 220) });
+                    }
+
+
+
+
+
+                    //Defensas
+                    tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("Defensas", parrafo)) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    if (defensas == "S" || defensas == "S/R" || defensas == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    if (defensas == "S/R")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(check) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+                    else if (defensas == "S/unSelect")
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(noSelect) { HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+                    else
+                    {
+                        tableSistemaElecrtrico.AddCell(new PdfPCell(new Phrase("")) { BackgroundColor = new BaseColor(242, 244, 244) });
+                    }
+
+
+                    doc.Add(tableSistemaElecrtrico);
+
+
+
+
+                    if (statusReturn != null)
+                    {
+                        doc.Add(Chunk.NEWLINE);
+
+                        //Oberrvacion
+                        var tableObervacion = new PdfPTable(new float[] { 12f }) { WidthPercentage = 100 };
+                        var cellTitle = new PdfPCell(new Phrase("OBSERVACIONES DE LA EVALUACIÓN")) { PaddingTop = 10f, BackgroundColor = new BaseColor(213, 216, 220), HorizontalAlignment = Element.ALIGN_CENTER, PaddingBottom = 8f, Border = 0 };
+                        var cellObservacion = new PdfPCell(new Phrase(observacionDeLaEvaluacion)) { PaddingTop = 10f, BackgroundColor = new BaseColor(242, 244, 244), Border = 0 };
+                        tableObervacion.AddCell(cellTitle);
+                        tableObervacion.AddCell(cellObservacion);
+
+
+                        doc.Add(tableObervacion);
+
+                    }
+
+
+
+
+
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    //first one
+
+
+                    var tableFirma = new PdfPTable(new float[] { 50f, 50f }) { WidthPercentage = 100 };
+                    tableFirma.AddCell(new PdfPCell(new Phrase("Entregado por Logistic Equipment")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 10f, PaddingBottom = 10f });
+
+                    if (entregadoPorLogiticRetorno != null)
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase("Entregado por Logistic Equipment")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 10f, PaddingBottom = 10f });
+
+                    }
+                    else
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase("")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 10f, PaddingBottom = 10f });
+
+                    }
+
+                    tableFirma.AddCell(new PdfPCell(new Phrase(entregaPorLogistic)) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244), PaddingTop = 10f, PaddingBottom = 10f });
+                    if (entregadoPorLogiticRetorno != null)
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase(entregadoPorLogiticRetorno)) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244), PaddingTop = 10f, PaddingBottom = 10f });
+
+                    }
+                    else
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase("")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244), PaddingTop = 10f, PaddingBottom = 10f });
+
+                    }
+
+
+
+
+
+
+
+                    tableFirma.AddCell(new PdfPCell(new Phrase("Recibido por Chofer en Representacion del Cliente")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 10f, PaddingBottom = 10f });
+
+                    if (recibidoPorChoferRetorno != null)
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase("Recibido por Chofer en Representacion del Cliente")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 10f, PaddingBottom = 10f });
+
+                    }
+                    else
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase("")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, PaddingTop = 10f, PaddingBottom = 10f, BackgroundColor = new BaseColor(213, 216, 220) });
+
+                    }
+
+                    tableFirma.AddCell(new PdfPCell(new Phrase(recibidoPorChofer)) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244), PaddingTop = 10f, PaddingBottom = 10f });
+                    if (recibidoPorChoferRetorno != null)
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase(recibidoPorChoferRetorno)) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244), PaddingTop = 10f, PaddingBottom = 10f });
+
+                    }
+                    else
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase("")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, PaddingTop = 10f, PaddingBottom = 10f, BackgroundColor = new BaseColor(242, 244, 244) });
+
+                    }
+
+
+
+
+
+
+                    if (imgDespacho != null)
+                    {
+                        iTextSharp.text.Image imgDispatch = iTextSharp.text.Image.GetInstance(imgDespacho);
+                        float anchoDispatch = imgDispatch.Width;
+                        float altoDispatch = imgDispatch.Height;
+                        float proporcionDispatch = altoDispatch / anchoDispatch;
+
+                        imgDispatch.ScaleAbsoluteWidth(200);
+                        imgDispatch.ScaleAbsoluteHeight(200 * proporcionDispatch);
+
+                        tableFirma.AddCell(new PdfPCell(imgDispatch) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 25f, PaddingBottom = 25f });
+
+                    }
+                    else
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase("")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 25f, PaddingBottom = 25f });
+
+                    }
+
+                    if (imgRetorno != null)
+                    {
+                        iTextSharp.text.Image imgReturn = iTextSharp.text.Image.GetInstance(imgRetorno);
+                        float anchoReturn = imgReturn.Width;
+                        float altoReturn = imgReturn.Height;
+                        float proporcionReturn = altoReturn / anchoReturn;
+
+                        imgReturn.ScaleAbsoluteWidth(200);
+                        imgReturn.ScaleAbsoluteHeight(200 * proporcionReturn);
+
+                        if (imgRetorno != null)
+                        {
+                            tableFirma.AddCell(new PdfPCell(imgReturn) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 25f, PaddingBottom = 25f });
+                        }
+                        else
+                        {
+                            tableFirma.AddCell(new PdfPCell(new Phrase("")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 25f, PaddingBottom = 25f });
+                        }
+                    }
+                    else
+                    {
+                        tableFirma.AddCell(new PdfPCell(new Phrase("")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(213, 216, 220), PaddingTop = 25f, PaddingBottom = 25f });
+
+                    }
+
+
+
+
+
+                    tableFirma.AddCell(new PdfPCell(new Phrase("Despacho")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244), PaddingTop = 10f, PaddingBottom = 10f });
+
+                    tableFirma.AddCell(new PdfPCell(new Phrase("Retorno")) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER, BackgroundColor = new BaseColor(242, 244, 244), PaddingTop = 10f, PaddingBottom = 10f });
+
+
+
+
+
+                    doc.Add(tableFirma);
+
+
+
+
+                    doc.Add(Chunk.NEWLINE);
+                    doc.Add(Chunk.NEWLINE);
+                    doc.Add(Chunk.NEWLINE);
+
+                    var tituloPoderLegal = new Paragraph("CONTRATO DE USO CONTENEDORES Y CHASIS", titulo);
+                    tituloPoderLegal.Alignment = Element.ALIGN_CENTER;
+                    doc.Add(tituloPoderLegal);
+
+
+
+                    //one
+                    doc.Add(Chunk.NEWLINE);
+                    var titulo1 = new Paragraph("1. Para fines de este contrato:", tituloOne);
+                    doc.Add(titulo1);
+
+                    String para1 = "  \n DP World Logistics, es el agente Naviero y / o suplidor" +
+                    "de servicio de alquiler de equipo.EL TRANSPORTISTA, es la compañía de transporte terrestre contratada por EL CLIENTE.EL" +
+                    "CLIENTE, es el exportador, importador o empresa que solicita el servicio del alquiler de equipo.";
+                    Paragraph paragraph1 = new Paragraph(para1);
+
+                    doc.Add(paragraph1);
+
+
+                    //two
+                    doc.Add(Chunk.NEWLINE);
+                    var titulo2 = new Paragraph("2. El presente documento de arrendamiento se emite en cinco partes con la siguiente distribucion:", tituloOne);
+                    doc.Add(titulo2);
+
+                    String para2 = "  \n Original y Primera copia: DP World. • Segunda copia: TRANSPORTISTA • Tercera copia: CLIENTE • Cuarta copia:" +
+                        " Para ser retornada a DP World por el TRANSPORTISTA una vez ha sido firmada y sellada coma recibida por EL CLIENTE y coma " +
+                        "registro del retorno del(los) equipo(s).";
+                    Paragraph paragraph2 = new Paragraph(para2);
+
+                    doc.Add(paragraph2);
+
+
+
+                    //three
+                    doc.Add(Chunk.NEWLINE);
+                    var titulo3 = new Paragraph("3. De la custodia del contenedor/chasis:", tituloOne);
+                    doc.Add(titulo3);
+
+                    String para3 = "  \n Se entiende que un contenedor se encuentra bajo el control, custodia y responsabilidad del TRANSPORTISTA y de " +
+                        "EL CLIENTE, de manera conjunta o sucesiva desde el momento en que es enganchado par el cabezote del TRANSPORTISTA en la " +
+                        "Terminal Portuaria o lugar designado par DP World, hasta tanto es recibido de nuevo par DP World Logistics. en la Terminal" +
+                        " Portuaria u otra base designada de mutuo acuerdo, y DP World Logistics ha extendido a EL TRANSPORTISTA recibo firmado par " +
+                        "el equipo indicado fecha y lugar de entrega.";
+                    Paragraph paragraph3 = new Paragraph(para3);
+
+                    doc.Add(paragraph3);
+
+
+
+                    //four
+                    doc.Add(Chunk.NEWLINE);
+                    var titulo4 = new Paragraph("4. De las responsabilidades:", tituloOne);
+                    doc.Add(titulo4);
+
+                    String para4 = "  \n EL TRANSPORTISTA Y EL CLIENTE se hace responsable ante DP World Logistics y ante la línea marítima " +
+                        "dueña del contenedor de todo daño, robo, perdida o rotura del contenedor, chasis y de la carga contenida en el mismo, " +
+                        "mientras este se encuentre bajo el control y la custodia del TRANSPORTISTA y EL CLIENTE, no importa coma ocurra el daño " +
+                        "o la perdida. Así mismo, el TRANSPORTISTA y EL CLIENTE liberan a DP World Logistics con respeto a todos los pagos que " +
+                        "DP World pueda verse obligado a realizar par este concepto, incluido (pero no necesariamente solo) gastos legales para " +
+                        "la defensa o indemnizaciones, y gastos financieros razonables sabre dinero anticipado.";
+                    Paragraph paragraph4 = new Paragraph(para4);
+
+                    doc.Add(paragraph4);
+
+
+
+                    //five
+                    doc.Add(Chunk.NEWLINE);
+                    var titulo5 = new Paragraph("5. Del seguro:", tituloOne);
+                    doc.Add(titulo5);
+
+                    String para5 = "  \n Para garantizar el cumplimiento de la obligación expuesta en el párrafo anterior, EL TRANSPORTISTA," +
+                        " bajo responsabilidad y supervisión de EL CLIENTE, mantendrá una póliza de seguros emitida par una compañía de seguros " +
+                        "aprobada par DP World Logistics, cubriendo los siguientes riesgos (con los Iimites mínimos por cada siniestro) que se " +
+                        "especifican a continuación: Par robo, abandono, perdida o destrucción total del contenedor, así coma averías al mismo.";
+                    Paragraph paragraph5 = new Paragraph(para5);
+
+                    doc.Add(paragraph5);
+
+
+                    doc.Add(Chunk.NEWLINE);
+
+                    String item1 = "\t 1. Chasis sin contenedor USD$10,000.00 \t";
+                    String item2 = "\t 2. Contenedores secos (trailer) o patanas USD$40,000.00 \t";
+                    String item3 = "\t 3. Contenedores secos (tipo van) chasis USD$40,000.00 \t";
+                    String item4 = "\t 4. Chassis extendible USD$18,000.00 \t";
+                    String item5 = "\t 5. Trailer tipo flatbed USD$35,000.00 \t";
+                    String item6 = "\t 6. railer multi-ejes USD$55,000.00 \t \n";
+                    List list = new List();
+                    list.Add(item1);
+                    list.Add(item2);
+                    list.Add(item3);
+                    list.Add(item4);
+                    list.Add(item5);
+                    list.Add(item6);
+                    doc.Add(list);
+
+
+
+                    //six
+
+
+                    String para6 = " \n La(s) póliza(s) de seguro debe(n) indicar claramente la fecha de vencimiento y debe(n) constatar que ha(n)" +
+                        " sido cobrada(s), El endoso debe contener una cláusula donde la aseguradora se compromete a no cancelar cobertura sin que " +
+                        "se lo haya informado par escrito a DP World con par lo menos quince (15) días de antelación. DP World, tiene derecho a " +
+                        "solicitar de EL TRANSPORTISTA el certificado original de seguro, donde se indiquen asegurado, asegurador, conceptos y cuentas " +
+                        "aseguradas y números de póliza. Si el TRANSPORTISTA no suministra certificado original a DP World, cuando se le solicite," +
+                        " DP World tendrá derecho a cancelar el presente contrato indefinidamente. 6. DP World hará lo razonable posible para entregar" +
+                        " al TRANSPORTISTA y EL CLIENTE equipos en buenas condiciones de funcionamiento y mantenimiento, incluido estanqueidad de " +
+                        "las contenedores y funcionamientos correcto de la unidad de frio en contenedores refrigerados. Sin embargo, DP World no " +
+                        "ofrece garantías de que cada equipo este en perfectas condiciones en cada caso. Cada vez que DP World entrega equipos a EL " +
+                        "TRANSPORTISTA, es responsabilidad de EL TRANSPORTISTA inspeccionar dichos equipos para asegurarse de que los equipos están " +
+                        "en las condiciones requeridas por EL TRANSPORTISTA Y EL CLIENTE. En cada caso, EL TRANSPORTISTA tendrá derecho a negarse " +
+                        "a recibir cualquier equipo que a su solo juicio no está en las condiciones de uso requeridas por EL TRANSPORTISTA y EL " +
+                        "CLIENTE. EL TRANSPORTISTA está obligado a ejercer todos los cuidados razonables sabre el equipo y la carga mientras el" +
+                        " equipo y la carga están bajo custodia de EL TRANSPORTISTA. Esta obligación cubre tanto para evitar abuso en la operación " +
+                        "del equipo, coma mantenimiento de preocupaciones razonables para evitar robos y pillajes en las equipos o carga, y operación " +
+                        "debida de la unidad de frio en contenedores refrigerados. EL TRANSPORTISTA y EL CLIENTE, están obligados a devolver el contenedor" +
+                        " sabre el chasis a DP World en las mismas condiciones de uso y averías en que lo recibió, excepto por el desgaste normal " +
+                        "del equipo. Esta obligación incluye tanto los equipos coma materiales accesorios a las mismos, coma toldos, cables, barras " +
+                        "(en contenedores open top), cables y enchufes (en contenedores refrigerados), etc. EL TRANSPORTISTA está obligado a devolver " +
+                        "equipos a DP World limpios y libres de desperdicios de carga o materiales de trincaje. Daños al piso de los contenedores" +
+                        " producidos por derrames de la carga serán responsabilidad conjunta de EL TRANSPORTISTA y EL CLIENTE.\n" +
+                        "EL TRANSPORTISTA está obligado a ejercer todos los cuidados razonables sabre el equipo y la carga mientras el equipo y" +
+                        "la carga están bajo custodia de EL TRANSPORTISTA. Esta obligación cubre tanto para evitar abuso en la operación del " +
+                        "equipo, coma mantenimiento de preocupaciones razonables para evitar robos y pillajes en las equipos o carga, " +
+                        "y operación debida de la unidad de frio en contenedores refrigerados. EL TRANSPORTISTA y EL CLIENTE, están obligados a " +
+                        "devolver el contenedor sabre el chasis a DP World en las mismas condiciones de uso y averías en que lo recibió," +
+                        " excepto por el desgaste normal del equipo. Esta obligación incluye tanto los equipos coma materiales accesorios " +
+                        "a las mismos, coma toldos, cables, barras(en contenedores open top), cables y enchufes(en contenedores refrigerados)," +
+                        " etc.EL TRANSPORTISTA está obligado a devolver equipos a DP World limpios y libres de desperdicios de carga o materiales " +
+                        "de trincaje.Daños al piso de los contenedores producidos por derrames de la carga serán responsabilidad conjunta de EL TRANSPORTISTA y EL CLIENTE \n";
+                    Paragraph paragraph6 = new Paragraph(para6);
+
+                    doc.Add(paragraph6);
+
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    //seven
+                    var titulo7 = new Paragraph("7. De las inspecciones:", tituloOne);
+                    doc.Add(titulo7);
+
+                    String para7 = " \n Para dar cumplimiento a lo establecido en el párrafo anterior se hará una inspección conjunta entre el " +
+                        "chofer del cabezote en representación del TRANSPORTISTA y EL CLIENTE y el empleado de DP World, en el momento en que " +
+                        "el cabezote del TRANSPORTISTA se disponga a retirar el contenedor de la Terminal Portuaria de DP World. Las condiciones " +
+                        "del furgón se harán constar en el conduce un ejemplar del cual se incorpora a este acuerdo formando parte integral del" +
+                        " mismo, (coma el anexo #1, que en lo adelante se denomina el conduce) que debe ser firmado por ambas partes, quedándose " +
+                        "el chofer del TRANSPORTISTA con una copia. Si en el transcurso de la inspección se nota alguna condición que impida el buen " +
+                        "funcionamiento o la seguridad del contenedor y/o su cargamento, el chofer del TRANSPORTISTA podrá negarse a recibir un " +
+                        "contenedor cuando a su solo juicio este contenedor no reúna las condiciones debidas de estanqueidad y funcionamiento, o " +
+                        "cuando las anotaciones hechas en el conduce relativas a danos y defectos del equipo no reflejen razonablemente bien las " +
+                        "condiciones reales del equipo. Los pequeños golpes, abolladuras, rajaduras y demás señas visibles de deterioro también " +
+                        "deben ser anotados en la inspección a la salida y en el retorno del equipo, de manera que se pueda determinar cualquier " +
+                        "avería nueva que se produzca mientras el contenedor está bajo el control y custodia del TRANSPORTISTA y EL CLIENTE. " +
+                        "Al regreso del contenedor a la Terminal Portuaria de DP World, el chofer del TRANSPORTISTA estará en la obligación " +
+                        "de entregarlo formalmente al representante de DP World realizándose en ese momento una nueva inspección" +
+                        " (utilizándose el mismo conduce que queda abierto a la salida del contenedor). Para dejar cerrado el expediente," +
+                        " el chofer del TRANPORTISTA y el represen, tante de DP World deberán ambos firmar nuevamente el pie del conduce en " +
+                        "constancia de las condiciones del contenedor al regreso. Párrafo Único: Es responsabilidad del TRANSPORTISTA realizar " +
+                        "las inspecciones que estime conveniente a la hora de la entrega del contenedor al cliente y a la hará de recogerlo de " +
+                        "nuevo, para establecer las responsabilidades en caso de pérdida o avería mientras el contenedor permanezca en manos del cliente.\n";
+                    Paragraph paragraph7 = new Paragraph(para7);
+
+                    doc.Add(paragraph7);
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    //Eight
+                    var titulo8 = new Paragraph("8. De las reclamaciones:", tituloOne);
+                    doc.Add(titulo8);
+
+                    String para8 = " \n DP World confronta el conduce cubriendo la inspección conjunta realizada a la salida del contenedor con la " +
+                        "misma ejecutada al regreso, y le notifica par escrito al CLIENTE dentro un tiempo razonable en el caso de que haya danos " +
+                        "que reclamar al CLIENTE, entendiéndose que todos las danos agregados correrán par cuenta de EL CLIENTE. DP World factura " +
+                        "al CLIENTE por los gastos razonables de reparación y/o limpieza de las equipos cuando dichos gastos puedan atribuirse a " +
+                        "danos causados mientras las equipos estuvieron bajo custodia del TRANSPORTISTA y de EL CLIENTE. Si EL CLIENTE no hiciera " +
+                        "pagos de dichas facturas dentro de 60 días desde la fecha de dicha factura, DP World tendrá derecho (pero no obligación)" +
+                        "de rescindir el presente Contrato de arrendamiento de equipo y negar entrega de equipos adicionales a EL CLIENTE Y EL " +
+                        "TRANSPORTISTA. \n";
+                    Paragraph paragraph8 = new Paragraph(para8);
+
+                    doc.Add(paragraph8);
+
+                    doc.Add(Chunk.NEWLINE);
+                    //Nine
+                    var titulo9 = new Paragraph("9. De los equipos refrigerados:", tituloOne);
+                    doc.Add(titulo9);
+
+                    String para9 = " \n Los contenedores refrigerados deben ser transportados sin paradas innecesarias en el camino, para garantizar" +
+                        " la mejor conservación del producto. En el caso de que un contenedor refrigerado en posesión del TRANSPORTISTA Y " +
+                        "EL CLIENTE sufra algún desperfecto mecánico debe notificárselo a DP World de inmediato, sin importar el día o la hora. " +
+                        "El TRANSPORTISTA tendrá la responsabilidad de velar porque no se apague el contenedor refrigerado par falta de combustible " +
+                        "durante el trayecto. Para estos fines, el generador adjunto a los contenedores refrigerados " +
+                        "(cuando se suministre par DP World), tendrá suficiente combustible para su funcionamiento continua " +
+                        "durante 24 horas. Cualquier cantidad adicional de combustible que se necesite para el funcionamiento de dicho" +
+                        " generador tendrá que ser suministrado par el TRANSPORTISTA par su propia cuenta. El TRANSPORTISTA Y EL CLIENTE " +
+                        "debe asegurarse de que ninguna persona ajena pueda sustraer combustible, baterías o piezas de las neveras mientras " +
+                        "están bajo el control y la custodia del TRANSPORTISTA.\n";
+                    Paragraph paragraph9 = new Paragraph(para9);
+
+                    doc.Add(paragraph9);
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    //Ten
+                    var titulo10 = new Paragraph("10. Del servicio:", tituloOne);
+                    doc.Add(titulo10);
+
+                    String para10 = " \n Las partes acuerdan que los movimientos de exportación tendrán preferencia sabre la importación, " +
+                        "ya que se trata de productos perecederos en muches casos, que no pueden perder el barco para el cual fueron comprometidos." +
+                        " Si a la hora de cargar el barco, el TRANSPORTISTA no ha ido a buscar cualquier contenedor donde el exportador," +
+                        " DP World tendrá el derecho de contratar en su lugar a cualquier otro para realizar dicho movimiento.\n";
+                    Paragraph paragraph10 = new Paragraph(para10);
+
+                    doc.Add(paragraph10);
+
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    //Eleven
+                    var titulo11 = new Paragraph("11. De las sanciones:", tituloOne);
+                    doc.Add(titulo11);
+
+                    String para11 = " \n El TRANSPORTISTA Y EL CLIENTE se comprometen a velar por el cumplimento y el buen comportamiento de sus " +
+                        "choferes, y DP World deberá informar par escrito cualquier caso que amerite que el TRANSPORTISTA y EL CLIENTE tomen " +
+                        "medidas correctivas en este sentido. Si a pesar de todo, un chofer comete repetidas faltas, DP World podrá requerir y " +
+                        "deberá obtener del TRANSPORTISTA y EL CLIENTE la sustitución temporal o definitiva de tal chofer o negarse a usar al " +
+                        "TRANPOSTISTA.\n";
+                    Paragraph paragraph11 = new Paragraph(para11);
+
+                    doc.Add(paragraph11);
+
+
+                    doc.Add(Chunk.NEWLINE);
+
+                    //twelve
+                    var titulo12 = new Paragraph("12. Otras disposiciones:", tituloOne);
+                    doc.Add(titulo12);
+
+                    String para12 = " \n Nada en este contrato se debe interpretar en el sentido de que se establece una relación exclusiva " +
+                        "entre DP World, el TRANSPORTISTA y EL CLIENTE, quedando en libertad de contratar con otros al amparo de las leyes de la Nación.";
+                    Paragraph paragraph12 = new Paragraph(para12);
+
+                    doc.Add(paragraph12);
+
+
+                    doc.Add(Chunk.NEWLINE);
+                    doc.Add(Chunk.NEWLINE);
+                    doc.Add(Chunk.NEWLINE);
+
+
+                    var timeCreated = new PdfPTable(new float[] { 100f }) { WidthPercentage = 100 };
+                    timeCreated.AddCell(new PdfPCell(new Phrase("Multinacional Caucedo, Boca Chica R.D.", footer)) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER });
+                    timeCreated.AddCell(new PdfPCell(new Phrase("Tel: 809-287-5920 Email: sindicato.bocachica@gmail.com", footer)) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER });
+                    timeCreated.AddCell(new PdfPCell(new Phrase(localDate.ToString(), footer)) { Border = 0, HorizontalAlignment = Element.ALIGN_CENTER });
+                    doc.Add(timeCreated);
+
+                    //writer.Close();
+                    doc.Close();
+                    //file.Close();
+
+
+
+                }
+                catch (Exception ex)
+                 {
+                    loading = false;
+                    System.Diagnostics.Debug.Print(ex.Message);
+                }
+
+            }
+        }
+    }
+}

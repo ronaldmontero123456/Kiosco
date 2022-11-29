@@ -32,8 +32,4 @@
 		<Folder Include="Pages\" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\KioscoWebView\KioscoWebView.csproj" />
-	</ItemGroup>
-
 </Project>

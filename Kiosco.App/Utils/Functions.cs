@@ -1,6 +1,7 @@
 ﻿using DPWorldDR.Shared.Contracts;
 using DPWorldDR.Shared.Utilities;
 using System.Net;
+using System.Reflection;
 using System.Text;
 
 namespace Kiosco.App.Utils
@@ -76,16 +77,29 @@ namespace Kiosco.App.Utils
                 
                 for (int i = 0; i < res.Length; i++)
                 {
-                    var rex = HcmEmployeeDto?.GetType().GetProperties();
-                    var re = HcmEmployeeDto?.GetType().GetProperties().FirstOrDefault(p => p.Name.Contains(res[i].Trim()));
+                    PropertyInfo? re;
 
-                    if (re != null)
-                        re.SetValue(HcmEmployeeDto, valuetouse[i]);
+                    if (i == 0)
+                    {
+                        re = HcmEmployeeDto?.GetType().GetProperties().FirstOrDefault(p => p.Name.Contains("P_EFFDATE"));
+                    }else
+                        re = HcmEmployeeDto?.GetType().GetProperties().FirstOrDefault(p => p.Name.Contains(res[i].Trim()));
+
+
+                    re?.SetValue(HcmEmployeeDto, valuetouse[i]);
                     //else
                     //{
                     //    re = HcmEmployeeDto?.GetType().GetProperties().FirstOrDefault(p => p.Name.Contains("FIRST_NAME"));
                     //    re?.SetValue(HcmEmployeeDto, value.Split(',')[i]);
                     //}
+                }
+                if(valuetouse.Length > 56)
+                {
+                    PropertyInfo? rex;
+                    rex = HcmEmployeeDto?.GetType().GetProperties().FirstOrDefault(p => p.Name == "N");
+                    rex?.SetValue(HcmEmployeeDto, valuetouse[56]);
+                    rex = HcmEmployeeDto?.GetType().GetProperties().FirstOrDefault(p => p.Name == "F");
+                    rex?.SetValue(HcmEmployeeDto, valuetouse[57]);
                 }
 
                 ValuesToReturn.Add((T)HcmEmployeeDto);

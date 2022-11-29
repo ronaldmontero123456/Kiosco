@@ -5,7 +5,7 @@ namespace Kiosco.App.Data
 {
     public class CertificacionesLaborales
     {
-        public DateTime P_EFFDATE { get; set; }
+        public string P_EFFDATE { get; set; }
         public string P_PERNUM { get; set; }
         public string WELLNESS_SUPERVISOR { get; set; }
         public string EMP_LAST_NAME { get; set; }
@@ -61,6 +61,10 @@ namespace Kiosco.App.Data
         public string JOB_FAMILY_NAME { get; set; }
         public string JOB_FUNCTION_NAME { get; set; }
         public string SALARY_BASIS_NAME { get; set; }
+        public string N { get; set; }
+        public string F { get; set; }
+        public string T { get; set; }
+        public string X { get; set; }
 
         [JsonIgnore]
         [NotMapped]

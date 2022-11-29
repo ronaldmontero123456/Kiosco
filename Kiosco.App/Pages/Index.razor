@@ -11,6 +11,18 @@
 @inject IJSRuntime JSRuntime
 @inject ViewOptionService ViewOption
 
+    @if(Loading)
+    {
+      <div id="loading">
+        <div class="loader">
+            <div class="inner one"></div>
+            <div class="inner two"></div>
+            <div class="inner three"></div>
+        </div>
+      </div>
+    }
+
+
 <div class="row justify-content-center pt-5 mt-5">
 <div class="login-screen">
    <img id="btnLogo" src="css/imgs/image.png" width="150" height="100" />
@@ -20,22 +32,23 @@
     </div>
     <br />
     <div class="login-form">
-        <form class="was-validated">
+        <form class="was-validated" @onsubmit="@(e => OnClick())">
             <div class="control-group" style="margin-bottom:30px;">
-                <input style="min-width:90%" @bind-value="carnetCode" class="login-field font-weight-bold text-uppercase" name="id" id="txtUsername" type="text" placeholder="Carnet Code" required autofocus>
+                <input style="min-width:90%" @bind-value="carnetCode" class="login-field font-weight-bold text-uppercase" name="id" id="txtUsername" type="password" placeholder="Carnet Code" required autofocus>
                 <div class="invalid-feedback d-none">
                     Por favor ingresar su Carnet Code.
                 </div>
             </div>
 
             <label id="labelError" class="login-field-icon fui-use text-danger d-none" for="username">Credenciales Incorrectas </label>
-            <button type="button" class="btn btn-primary btn-large btn-block" @onclick="@(e => OnClick())" id="loginBtn"> INGRESAR </button>
+            <button type="submit" class="btn btn-primary btn-large btn-block" id="loginBtn"> INGRESAR </button>
          </form>
         </div>
     </div>
 </div>
 
 @code {
+    private bool Loading;
     string carnetCode = "";
     private WebResponse<string> LoginDTO = new();
 
@@ -47,6 +60,7 @@
 
     private async Task OnClick()
     {
+        Loading = true;
         GlovalSearch glovalSearch = new GlovalSearch
         {
             CarnetCode = carnetCode,
@@ -65,5 +79,6 @@
             await JSRuntime.InvokeVoidAsync("alertError");
             //await Swal.FireAsync("Oops...", "Something went wrong!", "error");
         }
+        Loading = false;
     }
 }

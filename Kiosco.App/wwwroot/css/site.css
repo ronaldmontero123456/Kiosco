@@ -12196,3 +12196,30 @@ button {
         display: flex;
     }
 
+
+.negrita{
+    color:#000;
+    font-weight:600
+}
+
+.btnlogout {
+    padding: 0.8em 1.8em;
+    border: 2px solid #fff;
+    position: relative;
+    overflow: hidden;
+    background-color: transparent;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 16px;
+    transition: .3s;
+    z-index: 1;
+    font-family: inherit;
+    color: #fff;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

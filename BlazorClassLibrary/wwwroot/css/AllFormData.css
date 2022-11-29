@@ -1,0 +1,31 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+.all-form{
+  margin-top:2rem;
+}
+
+.all-form table tr > th{
+    font-size:.7rem;
+    text-align:center;
+}
+.all-form > table{
+    margin-top:6rem;
+    background:#eee;
+}
+    .all-form table tr > td {
+        font-size: .7rem;
+        text-align: center;
+        font-weight:400;
+    }
+
+
+.borderRed {
+    border-left: 5px solid #E74C3C
+}
+.borderGreen {
+    border-left: 5px solid #28B463;
+}
+
+
+.bx-x{
+    font-size:1.2rem;
+}

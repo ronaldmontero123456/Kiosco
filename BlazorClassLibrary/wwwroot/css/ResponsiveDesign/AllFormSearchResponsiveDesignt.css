@@ -1,0 +1,15 @@
+﻿@media only screen and (max-device-width : 1030px) {
+    .banner-search{
+        padding-top:2rem;
+    }
+
+    
+}
+
+@media only screen and (min-device-width : 1030px) {
+    .banner-search {
+        padding-top: 2rem;
+    }
+
+  
+}

@@ -21,7 +21,10 @@ builder.Services.AddScoped(x =>
 });
 
 
-builder.Services.AddScoped<ITblResumenHorasService, TblResumenHorasService>().AddScoped<IDynamicFormsService, DynamicFormsService>().AddScoped<IHttpService, HttpService>().AddScoped<ILocalStorageService, LocalStorageService>().AddScoped<ICustomLogger, CustomLogger>().AddScoped<IOracleServices, OracleServices>().AddScoped<IPromocionesService, PromocionesService>()
+builder.Services.AddScoped<ITblResumenHorasService, TblResumenHorasService>()
+   .AddScoped<IDynamicFormsService, DynamicFormsService>().AddScoped<IHttpService, HttpService>()
+   .AddScoped<ILocalStorageService, LocalStorageService>().AddScoped<ICustomLogger, CustomLogger>()
+   .AddScoped<IOracleServices, OracleServices>().AddScoped<IPromocionesService, PromocionesService>()
    .AddScoped<ILoginService, LoginService>()
    .AddScoped<IVolantesPagosService, VolantesPagosService>()
    .AddScoped<ICertificacionesLaboralesService, CertificacionesLaboralesService>()

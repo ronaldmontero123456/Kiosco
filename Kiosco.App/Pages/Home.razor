@@ -16,10 +16,10 @@
     width: 190px;
     height: 254px;
     border-radius: 20px;
-    background: #FFFFFF;
+    background: #00000000;
+    border: 2px solid #00000000;
     position: relative;
     padding: 1.8rem;
-    border: 2px solid #c3c6ce;
     transition: 0.5s ease-out;
     overflow: visible;
     margin: 20px;
@@ -37,16 +37,11 @@
     width: 60%;
     border-radius: 1rem;
     border: none;
-    background-color: #008bf8;
-    color: #fff;
-    font-size: 1rem;
     padding: .5rem 1rem;
     position: absolute;
     left: 50%;
-    bottom: 0;
     opacity: 0;
     transition: 0.3s ease-out;
-    text-align: center;
 }
 .text-body {
     color: rgb(134, 134, 134);
@@ -63,14 +58,7 @@
     color:white;
 }
 /*Hover*/
-.card:hover {
-    border-color: #008bf8;
-    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
-}
-.card:hover .card-button {
-    transform: translate(-50%, 50%);
-    opacity: 1;
-}
+
 
 </style>
 </head>
@@ -90,27 +78,57 @@
 
 <div class="row justify-content-center pt-5 mt-10">
 
-            <button @onclick="@(e => {NavigationManager.NavigateTo("/PromocionesPage"); Loading = true;})">
-    <div class="card" style="background-color:#173A64">
+@*    <button @onclick="@(e => {NavigationManager.NavigateTo("/PromocionesPage"); Loading = true;})">
+    <div class="card" style="background-color:#1E1450">
     <div class="row justify-content-center">
-        <img src="css/imgs/crecimiento-personal.png" width="100" height="100">
-    </div>
-    <div class="card-details">
-        <p class="text-title">Promociones</p>
+        <img src="css/imgs/iconos servicios-promociones.png" width="300" height="300">
     </div>
     </div>
-    </button>
-        <button @onclick="@(e => {NavigationManager.NavigateTo("/NuevosIngresos"); Loading = true;})">
-    <div class="card" style="background-color:#173A64">
-    <div class="row justify-content-center">
-        <img src="css/imgs/trabajo-permanente.png" width="100" height="100">
+    </button>*@
+    <div class="card">
+        <div class="row justify-content-center">
+            <img src="css/imgs/iconos servicios-promociones.png" width="200" height="200" @onclick="@(e => {NavigationManager.NavigateTo("/PromocionesPage"); Loading = true;})">
+            </div>           
     </div>
-    <div class="card-details">
-        <p class="text-title">Nuevos Ingresos</p>
+    <div class="card">
+        <div class="row justify-content-center">
+             <img src="css/imgs/iconos servicios-nuevosingresos.png" width="200" height="200" @onclick="@(e => {NavigationManager.NavigateTo("/NuevosIngresos"); Loading = true;})">        
+        </div>
+       </div>
+    <div class="card">
+       <div class="row justify-content-center">
+           <img src="css/imgs/iconos servicios-resumenhoras.png" width="200" height="200" @onclick="@(e => {NavigationManager.NavigateTo("/ResumenHorasExtras"); Loading = true;})">
+       </div>
+       
     </div>
+    <div class="card">
+       <div class="row justify-content-center">
+            <img src="css/imgs/iconos servicios-volantespagos.png" width="200" height="200" @onclick="@(e => {NavigationManager.NavigateTo("/VolantesPagos"); Loading = true;})">
+       </div>
+       
     </div>
-    </button>
-    <button @onclick="@(e => {NavigationManager.NavigateTo("/ResumenHorasExtras"); Loading = true;})">
+    <div class="card">
+       <div class="row justify-content-center">
+           <img src="css/imgs/iconos servicios-certificacioneslaborales.png" width="200" height="200" @onclick="@(e => {NavigationManager.NavigateTo("/CertificacionesLaborales"); Loading = true;})">
+       </div>
+    </div>
+    <div class="card">
+       <div class="row justify-content-center">
+           <img src="css/imgs/iconos servicios-certificacioneslaborales.png" width="200" height="200" @onclick="@(e => {NavigationManager.NavigateTo("/Cursos"); Loading = true;})">
+       </div>
+    </div>
+    <div class="card">
+       <div class="row justify-content-center">
+           <img src="css/imgs/iconos servicios-certificacioneslaborales.png" width="200" height="200" @onclick="@(e => {NavigationManager.NavigateTo("/EncuentasInternas"); Loading = true;})">
+       </div>
+    </div>
+        
+    @*<div class="card" style="background-color:#173A64">*@
+@*    <div class="row justify-content-center">
+        <img src="css/imgs/iconos servicios-nuevosingresos.png" width="200" height="200">
+    </div>
+    </div>*@
+@*    <button @onclick="@(e => {NavigationManager.NavigateTo("/ResumenHorasExtras"); Loading = true;})">
     <div class="card" style="background-color:#173A64">
     <div class="row justify-content-center">
         <img src="css/imgs/Horas-Extras.png" width="100" height="100">
@@ -119,7 +137,7 @@
         <p class="text-title">Resumen de Horas Extras</p>
     </div>
     </div>
-    </button>
+    </button>*@
 @*    <div class="card" style="background-color:#173A64">
     <div class="row justify-content-center">
         <img src="css/imgs/cursos.png" width="100" height="100">
@@ -149,7 +167,7 @@
     </div>
     </div>
     </button>*@
-    <button @onclick="@(e => {NavigationManager.NavigateTo("/VolantesPagos"); Loading = true;})">
+@*    <button @onclick="@(e => {NavigationManager.NavigateTo("/VolantesPagos"); Loading = true;})">
             <div class="card" style="background-color:#173A64">
     <div class="row justify-content-center">
         <img src="css/imgs/flyer.png" width="100" height="100">
@@ -158,7 +176,7 @@
         <p class="text-title">Volantes de Pago</p>
     </div>
     </div>
-    </button>
+    </button>*@
 @*    <div class="card" style="background-color:#173A64">
     <div class="row justify-content-center">
         <img src="css/imgs/actualizaciones-disponibles.png" width="100" height="100">
@@ -169,7 +187,7 @@
     <button class="card-button" @onclick="@(e => NavigationManager.NavigateTo("/ActualizarDatosPersonales"))">Ver Formularios</button>
     </div>*@
 
-    <button @onclick="@(e => {NavigationManager.NavigateTo("/CertificacionesLaborales"); Loading = true;})">
+@*    <button @onclick="@(e => {NavigationManager.NavigateTo("/CertificacionesLaborales"); Loading = true;})">
             <div class="card" style="background-color:#173A64">
     <div class="row justify-content-center">
         <img src="css/imgs/configuración-de-maletín.png" width="100" height="100">
@@ -178,7 +196,7 @@
         <p class="text-title">Certificaciones Laborales</p>
     </div>
     </div>
-    </button>
+    </button>*@
 @*    <div class="card" style="background-color:#173A64">
     <div class="row justify-content-center">
         <img src="css/imgs/vacancy-64.png" width="100" height="100">

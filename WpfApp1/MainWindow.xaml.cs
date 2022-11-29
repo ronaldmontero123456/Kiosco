@@ -1,5 +1,6 @@
 ﻿using DPFP;
 using DPFP.Capture;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -42,8 +43,8 @@ namespace WpfApp1
                 Capturer.EventHandler = this;
                 Capturer.StartCapture();
             }
-                
 
+            var serviceCollection = new ServiceCollection();
 
             Verificator = new DPFP.Verification.Verification();
 

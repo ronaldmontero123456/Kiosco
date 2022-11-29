@@ -20,19 +20,15 @@
     </div>
 </div>
 
-  <RadzenImage Path="css/imgs/image.png" Class="rz-border-radius-10 float-start me-3" Style="width: 150px; height: 100px;" />
+    <img src="css/imgs/image.png" Class="end-text" Style="width: 150px; height: 100px;" />
 
 <div class="card mt-1">
     
     <div class="card-footer text-muted">
         <div class="d-flex justify-content-lg-between">
             <div class="">
-                <button type="button" @onclick="@(async() => await QPas())"> @*@onclick="ClearFields">*@
-                    <img src="css/imgs/icons8-izquierda.png" width="50" height="50">       
-                </button>
-                <button type="button" @onclick="@(async() => await QProx())"> @*@onclick="Search">*@
-                    <img src="css/imgs/icons8-derecha.png" width="50" height="50">  
-                </button>
+                    <img src="css/imgs/icons8-izquierda.png" @onclick="@(async() => await QPas())" width="50" height="50">       
+                    <img src="css/imgs/icons8-derecha.png" @onclick="@(async() => await QProx())" width="50" height="50">  
             </div>
             <div class="flex-grow-1">
                 <div class="alert @alertClass alert-dismissible fade show py-1 mx-1 @display" role="alert">

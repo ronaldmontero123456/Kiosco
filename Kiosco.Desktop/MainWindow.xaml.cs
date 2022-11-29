@@ -2,8 +2,9 @@
 using DPWCMSApp.Services;
 using DPWorldDR.Shared.Contracts;
 using DPWorldDR.Shared.Services.OracleServices;
-using KioscoWebView.Services;
-using KioscoWebView.Utils;
+using Kiosco.App.Services;
+using Kiosco.App.Utils;
+using Kiosco.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;

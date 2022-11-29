@@ -1,0 +1,49 @@
+﻿@using BlazorStrap
+@inject NavigationManager Navigation
+
+<div class="menu-screen">
+<BSNavbar style="background-color:#1E1450" Expand="Size.None">
+    <BSContainer Container="Container.Fluid">
+        <div> 
+            <img src="/Imagen/DP_World_Logo_BlackBG.png" width="80" height="50" @onclick="Navigate"> 
+        </div>
+        <div style="margin:auto" class="text-white fs-4 fw-bold"> 
+            <label> Equipo de Protección Personal  </label>
+        </div>
+
+    </BSContainer>
+</BSNavbar>
+</div>
+
+
+@code {
+    //private BSOffCanvas? _offCanvasRef;
+
+    //private async Task Show()
+    //{
+    //    if (_offCanvasRef != null) await _offCanvasRef.ToggleAsync();
+    //}    //private async Task Show()
+    //{
+    //    if (_offCanvasRef != null) await _offCanvasRef.ToggleAsync();
+    //}
+
+    public void Navigate()
+    {
+        Navigation.NavigateTo("");
+    }
+
+    public void NavigateC()
+    {
+        Navigation.NavigateTo("CrearMatrices");
+    }
+
+    public void NavigateE()
+    {
+        Navigation.NavigateTo("MatricesExistentes");
+    }
+
+    public void NavigateS()
+    {
+        Navigation.NavigateTo("NuevosPendientes");
+    }
+}

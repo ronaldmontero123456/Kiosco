@@ -4,16 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kiosco.Desktop"
-        xmlns:shared="clr-namespace:KioscoWebView;assembly=KioscoWebView"
+        xmlns:shared="clr-namespace:BlazorClassLibrary;assembly=BlazorClassLibrary"
         xmlns:blazor="clr-namespace:Microsoft.AspNetCore.Components.WebView.Wpf;assembly=Microsoft.AspNetCore.Components.WebView.Wpf"
         mc:Ignorable="d"
         Title="KIOSCO APP" Height="450" Width="800">
     <DockPanel>
 
-        <blazor:BlazorWebView HostPage="wwwroot\index.html" Services="{DynamicResource services}">
-            <blazor:BlazorWebView.RootComponents>
-                <blazor:RootComponent Selector="#app" ComponentType="{x:Type shared:App}" />
-            </blazor:BlazorWebView.RootComponents>
-        </blazor:BlazorWebView>
     </DockPanel>
 </Window>

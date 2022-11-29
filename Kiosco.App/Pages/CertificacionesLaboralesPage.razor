@@ -6,64 +6,113 @@
 @using Kiosco.App.Utils
 @inject ICertificacionesLaboralesService _certificacionesLaboralesService;
 @inject NavigationManager NavigationManager;
+@inject IJSRuntime jsRunTime;
 
-<div class="card mt-1">
+    @if(@Loading)
+    {
+      <div id="loading">
+        <div class="loader">
+            <div class="inner one"></div>
+            <div class="inner two"></div>
+            <div class="inner three"></div>
+        </div>
+      </div>
+    }
+
+<div class="card mt-1 hideWhenPrint">
     <div class="card-body p-2 text-center">
         <div class="d-flex flex-row align-items-center">
             <RadzenImage Path="css/imgs/EncuestaIcon.png" Class="rz-border-radius-10 float-start me-3" Style="width: 50px; height: 40px;" />
               <div class="d-flex bd-highlight">
                    <p class="fw-bold mb-0"><i class="fas fa-clock"></i> • Certificaciones Laborales</p>
               </div>
-            <button type="button" class="btn btn-sm float-end" title="Print">
-                <i class="bi bi-printer-fill"></i>
-            </button>
         </div>      
     </div>
 </div>
 
-  <RadzenImage Path="css/imgs/image.png" Class="rz-border-radius-10 float-start me-3" Style="width: 150px; height: 100px;" />
-
 <div class="cert-lab">
-    <h3>C E R T I F I C A C I Ó N</h3>
 
-<p>
-    Hacemos constar que el señor <strong>@FullName</strong>, portadora de la cédula de identidad y electoral no. @certificacionesLaborales.ADDRESS_LINE_1, labora en esta empresa desde 04 de julio del año 2017, desempeñándose en el cargo de Gerente Legal en el departamento Finanzas.
-	
-    el señor @FullName devenga un salario anual de la suma de <strong>RD$ ($@(certificacionesLaborales.EMPLOYEE_Money.ToString("N2") +" " + stringnumtotext))</strong> con beneficios incluidos.
+    <button type="button" class="btn btn-sm float-center end-text hideWhenPrint"  @onclick="print" title="Print">
+        <i class="bi bi-printer-fill"></i>
+    </button>
+    <div style="display:flex; justify-content:space-between">
+        <img src="css/imgs/image.png" Style="width: 250px; height: 200px;" />
+        <h6 class="text-dark font-weight-bold " style="font-family: Times New Roman; font-style:italic; padding-top:100px;">dpworld.com</h6>
+    </div>
+   
 
-    Este documento ha sido emitido el día 28 de octubre de 2022, municipio de Boca Chica, Santo Domingo.
+    <h3 style="font-family: Times New Roman;  font-style:italic; padding-top: 130px">C E R T I F I C A C I Ó N</h3>
+
+<div class="container" style="padding-left: 50px; padding-right: 50px;  padding-top: 130px">
+    <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
+    Hacemos constar que el señor <b class="text-dark font-weight-bold" style="font-weight:500">@FullName</b>, portadora de la cédula de identidad y 
+    electoral no. <b class="text-dark font-weight-bold" style="font-weight:500">@certificacionesLaborales.ADDRESS_LINE_1</b>, labora en esta empresa desde <b class="text-dark font-weight-bold" style="font-weight:500">@DateSinceWorked.Day de @DateSinceWorked.ToString("MMM") del año @DateSinceWorked.Year</b>
+    , desempeñándose en el cargo de <b class="text-dark font-weight-bold" style="font-weight:500">@certificacionesLaborales.N</b> en el departamento <b class="text-dark font-weight-bold" style="font-weight:500">@certificacionesLaborales.F</b>.	
+    </p>
+    <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
+         El señor <b class="text-dark font-weight-bold" style="font-weight:500">@FullName</b> devenga un salario anual de la suma de 
+        <b class="text-dark font-weight-bold" style="font-weight:500">RD$</b>($@(certificacionesLaborales.EMPLOYEE_Money.ToString("N2") +" " + stringnumtotext))
+        con beneficios incluidos.
+    </p>
+
+    <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
+        Este documento ha sido emitido el día @(DateTime.Now.Day) de @(DateTime.Now.ToString("MMM")) de @(DateTime.Now.Year), municipio de Boca Chica, Santo Domingo.
+    </p>
+    
 	 	
 
-</p>
-
-
-<p>
-   <h6>Radhyvelka Villalona</h6>
+   <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic; padding-top: 100px">Radhyvelka Villalona</h6>
     Supervisora de Bienestar y Servicios
-</p>
+
+
+    <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic; padding-top: 130px">RNC: 1-01-76597-6</h6>
 
 </div>
 
+    <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic; padding-top: 320px">Edificio Administrativo</h6>
+    <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic;">Suite 300</h6>
+    <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic;">Punta Caucedo, Boca Chica</h6>
+    <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic;">dpworld.com</h6>
+    <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic;">TEL:809-373-7300</h6>
+</div>
 
-      <div class="col-lg-2 p-3">
+
+      <div class="col-lg-2 p-3 hideWhenPrint">
           <RadzenButton Text="VOLVER" Click="@(args => Volver())" class="bg bg-blue-cau" />
       </div>
 
 
 @code {
 
-    static string FullName = "";
-    static CertificacionesLaborales certificacionesLaborales = new();
-    static string stringnumtotext = "";
+    private bool Loading;
+    string FullName = "";
+    DateTime DateSinceWorked;
+    CertificacionesLaborales certificacionesLaborales = new();
+    string stringnumtotext = "";
     protected async override void OnInitialized()
     {
-        certificacionesLaborales = await _certificacionesLaboralesService.GetCertificacionesLaboralesAsync();
-        FullName = certificacionesLaborales.EMP_NAME + " " + certificacionesLaborales.EMP_MIDDLE_NAME + " " + certificacionesLaborales.EMP_LAST_NAME + " " + certificacionesLaborales.EMP_MATERNAL_LAST;
-        stringnumtotext = Functions.NumberToText((int)certificacionesLaborales.EMPLOYEE_Money);
+        try
+        {
+            Loading = true;        
+            certificacionesLaborales = await _certificacionesLaboralesService.GetCertificacionesLaboralesAsync();
+            DateSinceWorked = DateTime.Parse(certificacionesLaborales.NATIONAL_IDENTIFIER_TYPE);
+            FullName = certificacionesLaborales.EMP_NAME + " " + certificacionesLaborales.EMP_MIDDLE_NAME + " " + certificacionesLaborales.EMP_LAST_NAME + " " + certificacionesLaborales.EMP_MATERNAL_LAST;
+            stringnumtotext = Functions.NumberToText((int)certificacionesLaborales.EMPLOYEE_Money);
+            Loading = false;
+        }catch(Exception)
+        {
+            Loading = false;
+            await jsRunTime.InvokeVoidAsync("alertErrorForCertificaciones");
+            Volver();
+        }
 
-        base.OnInitialized();
+        StateHasChanged();
     }
 
+    private void print()
+    {
+        jsRunTime.InvokeVoidAsync("Print");
+    }
     
     void Volver()
     {
