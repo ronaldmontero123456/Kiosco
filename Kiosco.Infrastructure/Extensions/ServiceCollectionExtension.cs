@@ -14,6 +14,7 @@ namespace Kiosco.Infrastructure.Extensions
         {
             services.AddDbContext<KioscoContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnection")));
             services.AddDbContext<KioscoDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnectionKioco")));
+            services.AddDbContext<KioscoContextHCM>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnectionKiocoHCM")));
             return services;
         }
 

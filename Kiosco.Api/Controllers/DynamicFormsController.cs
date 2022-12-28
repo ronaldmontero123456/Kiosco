@@ -1,4 +1,5 @@
 ﻿using Kiosco.Core.Entities;
+using Kiosco.Core.Entities.DTO;
 using Kiosco.Core.Interfaces;
 using Kiosco.Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
@@ -11,8 +12,8 @@ namespace Kiosco.Api.Controllers
     public class DynamicFormsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly KioscoContext _context;
-        public DynamicFormsController(IUnitOfWork unitOfWork, KioscoContext context)
+        private readonly KioscoDbContext _context;
+        public DynamicFormsController(IUnitOfWork unitOfWork, KioscoDbContext context)
         {
             _unitOfWork = unitOfWork;
             _context = context;
@@ -21,7 +22,25 @@ namespace Kiosco.Api.Controllers
         [HttpGet]   
         public IActionResult GetDynamicForms()
         {
-            var response =  _unitOfWork.DynamicFormsRepository.GetAll();
+            var response =  _unitOfWork.DynamicFormsRepository.GetAll()
+                                       .GroupBy(r => r.Modulo).Select(r => r.FirstOrDefault());
+
+            var result = new WebResponse<IEnumerable<DynamicForms>>()
+            {
+                body = response,
+                isSuccess = true,
+                message = "Success",
+                statusCode = "200",
+            };
+
+            return Ok(result);
+        }
+        [HttpPost]
+        [Route("GetDynamicFormsByName")]
+        public IActionResult GetDynamicFormsByName(GlobalSearchDTO Modulo)
+        {
+            var response =  _unitOfWork.DynamicFormsRepository.Get(u => u.Modulo == Modulo.Module);
+
             var result = new WebResponse<IEnumerable<DynamicForms>>()
             {
                 body = response,

@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="BlazorStrap.Extensions.BSDataTable" Version="1.5.1" />
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Radzen.Blazor" Version="4.3.6" />

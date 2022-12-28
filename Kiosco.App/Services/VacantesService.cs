@@ -6,7 +6,9 @@ namespace Kiosco.App.Services
     public interface IVacantesService
     {
         Task<WebResponse<IEnumerable<Vacantes>>> GetVacantesAsync();
-        Task<WebResponse<int>> AddVacantesAsync(Vacantes vacante);
+        Task<WebResponse<IEnumerable<VacantesAplicar>>> GetVacantesAplicarAsync();
+        Task<WebResponse<int>> AddVacantesAsync<T>(T vacante);
+        Task<WebResponse<int>> AddVacantesAsync(VacantesAplicar vacante);
     }
     
 
@@ -24,9 +26,18 @@ namespace Kiosco.App.Services
         {
             return await _httpService.Get<WebResponse<IEnumerable<Vacantes>>>("api/Vacantes");
         }
-        public async Task<WebResponse<int>> AddVacantesAsync(Vacantes vacante)
+        public async Task<WebResponse<int>> AddVacantesAsync<T>(T vacante)
         {
             return await _httpService.Post<WebResponse<int>>("api/Vacantes", vacante);
+        }
+        public async Task<WebResponse<int>> AddVacantesAsync(VacantesAplicar vacante)
+        {
+            return await _httpService.Post<WebResponse<int>>("api/Vacantes/AddVacanteAplicar", vacante);
+        }
+
+        public async Task<WebResponse<IEnumerable<VacantesAplicar>>> GetVacantesAplicarAsync()
+        {
+            return await _httpService.Get<WebResponse<IEnumerable<VacantesAplicar>>>("api/Vacantes/GetVacanteAplicar");
         }
     }
 }

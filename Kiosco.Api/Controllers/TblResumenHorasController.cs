@@ -4,6 +4,7 @@ using Kiosco.Core.Interfaces;
 using Kiosco.Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Kiosco.Api.Controllers
@@ -13,9 +14,9 @@ namespace Kiosco.Api.Controllers
     public class TblResumenHorasController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly KioscoContext _context;
+        private readonly KioscoContextHCM _context;
 
-        public TblResumenHorasController(IUnitOfWork unitOfWork, KioscoContext context)
+        public TblResumenHorasController(IUnitOfWork unitOfWork, KioscoContextHCM context)
         {
             _unitOfWork = unitOfWork;
             _context = context;
@@ -35,7 +36,8 @@ namespace Kiosco.Api.Controllers
 
         private Expression<Func<TblResumenHoras, bool>> GetExpression(GlobalSearchDTO tblResumenHoras)
         {
-            return e => e.HFNOM >= tblResumenHoras.DateFrom;
+            return e => e.HCODE.Contains(tblResumenHoras.CUSTOMER_ID.ToString())
+            && e.HFNOM >= tblResumenHoras.DateFrom && e.HFNOM <= tblResumenHoras.DateTo;
         }
 
     }

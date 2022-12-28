@@ -1,9 +1,12 @@
 ﻿@inherits LayoutComponentBase
 @using DPWCMSApp.Services
 @using Kiosco.App.Services 
+@using System.Timers
+@inject IJSRuntime JSRuntime
 @inject ILocalStorageService localStorage;
 @inject ViewOptionService ViewOption
 @inject NavigationManager NavigationManager;
+@inject IConfiguration Configuration;
 
 <style>
     
@@ -28,7 +31,7 @@
 <PageTitle>Kiosco.App</PageTitle>
 
 <header class="navbar navbar-dark sticky-top bg-blue-cau p-0 shadow  @ViewOption.NavBarClass">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">KIOSCO WEB</a>
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3">KIOSCO WEB</a>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -52,16 +55,46 @@
 
 @code{
 
+    private Timer timerObj;
+
     protected override async Task OnInitializedAsync()
     {
+
         ViewOption.OnChanged = () => {
             StateHasChanged();//Refresh
         };
     }
+    //private bool IsBussy = false;
+    //protected async override Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    // Set the Timer delay.
+
+    //    //timerObj = new Timer(int.Parse(Configuration["Timer"]));
+    //    //timerObj.Elapsed += UpdateTimer;
+    //    //timerObj.AutoReset = false;
+    //    // Identify whether the user is active or inactive using onmousemove and onkeypress in JS function.
+    //    await JSRuntime.InvokeVoidAsync("timeOutCall", DotNetObjectReference.Create(this));
+
+    //}
+
+    //[JSInvokable]
+    //public void TimerInterval()
+    //{
+    //    // Resetting the Timer if the user in active state.
+    //    timerObj.Stop();
+    //    timerObj.Start();
+    //    //timerObj = new Timer(int.Parse(Configuration["Timer"]));
+    //    // Call the TimeInterval to logout when the user is inactive.
+    //}
 
     private void LogOut()
     {
         NavigationManager.NavigateTo($"/");
     }
+
+    //private void UpdateTimer(Object source, ElapsedEventArgs e)
+    //{
+    //    LogOut();
+    //}
 
 }

@@ -9,5 +9,6 @@
         public string? ACTION { get; set; }
         public string? EFFECTIVE_START_DATE { get; set; }
         public string? DEPARTMENT_NAME { get; set; }
+        public string? IMGEMPLEADOS { get; set; }
     }
 }

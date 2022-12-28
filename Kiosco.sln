@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kiosco.Desktop", "Kiosco.De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorClassLibrary", "BlazorClassLibrary\BlazorClassLibrary.csproj", "{28290989-FFD7-4814-B020-3B9065797EDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp2", "BlazorApp2\BlazorApp2.csproj", "{B1BF6133-92C7-49E1-85B1-39CFBF62E330}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp2", "BlazorApp2\BlazorApp2.csproj", "{B1BF6133-92C7-49E1-85B1-39CFBF62E330}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kiosco.Core.Entities
 {
@@ -10,5 +6,12 @@ namespace Kiosco.Core.Entities
     {
         public string? idEmpleado { get; set; }
         public string? Empleado { get; set; }
+        public string? EMP_PERSON_NUMBER { get; set; }
+        public string? POSITION_NAME { get; set; }
+        public string? SUP_NAME { get; set; }
+        public string? EMAIL_ADDRESS { get; set; }
+        public DateTime? START_DATE { get; set; }
+        [NotMapped]
+        public string? Sub_Email { get; set; }
     }
 }

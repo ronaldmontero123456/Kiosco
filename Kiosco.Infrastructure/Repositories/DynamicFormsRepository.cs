@@ -7,6 +7,6 @@ namespace Kiosco.Infrastructure.Repositories
 {
     public class DynamicFormsRepository : BaseRepository<DbContext, DynamicForms>, IDynamicFormsRepository
     {
-        public DynamicFormsRepository(KioscoContext context) : base(context) { }
+        public DynamicFormsRepository(KioscoDbContext context) : base(context) { }
     }
 }

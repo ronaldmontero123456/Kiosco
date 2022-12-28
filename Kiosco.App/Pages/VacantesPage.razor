@@ -4,6 +4,17 @@
 @inject IVacantesService VacantesService
 @inject NavigationManager NavigationManager;
 
+@if (@Loading)
+{
+    <div id="loading">
+        <div class="loader">
+            <div class="inner one"></div>
+            <div class="inner two"></div>
+            <div class="inner three"></div>
+        </div>
+    </div>
+}
+
 
 <div class="card mt-1">
     <div class="card-body p-2 text-center">
@@ -63,13 +74,17 @@
       </div>
 
 @code {
-    static List<Vacantes> VacantesList = new();
+    
+    List<Vacantes> VacantesList = new();
+    private bool Loading;
 
     protected override async void OnInitialized()
     {
+        Loading = true;
         var result = await VacantesService.GetVacantesAsync();
         VacantesList = result.body.ToList();
-        base.OnInitialized();
+        Loading = false;
+        StateHasChanged();
     }
 
     void CrearVacante()

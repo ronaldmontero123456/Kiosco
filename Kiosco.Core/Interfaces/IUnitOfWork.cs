@@ -13,6 +13,7 @@ namespace Kiosco.Core.Interfaces
         public IVacantesRepository VacantesRepository { get; }
         public IvEmpleadosRepository vEmpleadosRepository { get; }
         public ILoginRepository LoginRepository { get; }
+        public IEncuestasInternasRepository EncuestasInternasRepository { get; }
         Task SaveChangesAsync();
     }
 }

@@ -9,11 +9,9 @@ namespace Kiosco.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TblResumenHoras>().HasKey(e => e.idResumenHoras);
             modelBuilder.Entity<DynamicForms>().HasKey(e => e.FormID);
             modelBuilder.Entity<Empleados>().HasKey(e => e.EmpId);
         }
-        public DbSet<TblResumenHoras> TblResumenHoras { get; set; }
         public DbSet<DynamicForms> DynamicForms { get; set; }
         public DbSet<Empleados> Empleados { get; set; }
     }

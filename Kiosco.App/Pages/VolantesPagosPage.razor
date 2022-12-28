@@ -4,6 +4,7 @@
 @inject IVolantesPagosService _VolantesPagos;
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime jsRunTime;
+@using System.Threading.Tasks
 
     @if(@Loading)
     {
@@ -78,19 +79,19 @@
  <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="50" AllowSorting="true" Data="@VolantesPagosDetails" TItem="VolantesPagosItem">
 
      <Columns>
-         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="descripcion" Title="Movimiento" />
-         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="cant_horas" Title="Sueldo/Hr. Cant/Hr." />
-         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="monto" Title="Monto">
+         <RadzenDataGridColumn TItem="VolantesPagosItem" Width ="250" Property="descripcion" Title="Movimiento" />
+            <RadzenDataGridColumn TItem="VolantesPagosItem" TextAlign="TextAlign.End" Property="cant_horas" Title="Sueldo/Hr. Cant/Hr." />
+            <RadzenDataGridColumn TItem="VolantesPagosItem" TextAlign="TextAlign.End" Property="monto" Title="Monto">
             <FooterTemplate>
                 Totales.:   <b>@FullMonto.ToString("N2")</b>
             </FooterTemplate>
          </RadzenDataGridColumn>
-         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="descuento" Title="Desc.">
+            <RadzenDataGridColumn TItem="VolantesPagosItem" TextAlign="TextAlign.End" Property="descuento" Title="Desc.">
             <FooterTemplate>
                 Total Desc.:   <b>@FullDescuento.ToString("N2")</b>
             </FooterTemplate>
          </RadzenDataGridColumn>
-         <RadzenDataGridColumn TItem="VolantesPagosItem" Property="descuento" Title="Balance" />
+            <RadzenDataGridColumn TItem="VolantesPagosItem" TextAlign="TextAlign.End" Property="descuento" Title="Balance" />
      </Columns>    
  </RadzenDataGrid>
 
@@ -105,12 +106,12 @@
 
 
 
-     List<VolantesPagosItem> VolantesPagosDetails = new();
-     private bool Loading;
-     float FullMonto;
-     float FullDescuento;
-     float FullNetoCobrar;
-     VolantesPagosItem VolantesPagosDetail = new();
+    List<VolantesPagosItem> VolantesPagosDetails = new();
+    private bool Loading;
+    float FullMonto;
+    float FullDescuento;
+    float FullNetoCobrar;
+    VolantesPagosItem VolantesPagosDetail = new();
 
     protected async override void OnInitialized()
     {
@@ -134,9 +135,14 @@
         StateHasChanged();
     }
 
-    private void print()
+    private async Task print()
     {
-        jsRunTime.InvokeVoidAsync("Print");
+        await jsRunTime.InvokeVoidAsync("Print");
+        bool formvalidate = false;
+        if (await jsRunTime.InvokeAsync<bool>("alertForValidLogout", formvalidate))
+        {
+            NavigationManager.NavigateTo($"/#");
+        }
     }
 
     void Volver()

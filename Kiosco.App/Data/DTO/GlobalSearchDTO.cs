@@ -20,6 +20,7 @@ namespace Kiosco.App.Data
         public DateTime DeleteDateTime { get; set; }
         public DateTime OracleFusionSyncDateTime { get; set; }
         public DateTime PaidToDateTime { get; set; }
+        public string Module { get; set; }
         // Paging
         public int PageNumber { get; set; }
         public int PageSize { get; set; }

@@ -8,6 +8,7 @@ namespace Kiosco.App.Services
     public interface ITblResumenHorasService
     {
         Task<List<TblResumenHoras>> Get(PayrollSummary payrollSummary);
+        Task<List<TblResumenHoras>> GetByDb(GlobalSearchDTO globalSearchDTO);
     }
 
 
@@ -25,9 +26,9 @@ namespace Kiosco.App.Services
             return await _httpService.SendPost<List<TblResumenHoras>>
                 (@$"/POEMSHrmsIntegration/GetEmployeePayrollSummary?month={payrollSummary.Month}&year={payrollSummary.Year}&payperiod={payrollSummary.PayPeriod}&BUCode={payrollSummary.BUCode}&CostCenter={payrollSummary.CostCenter}", "");
         }
-        public async Task<List<TblResumenHoras>> Post(GlobalSearchDTO globalSearchDTO)
+        public async Task<List<TblResumenHoras>> GetByDb(GlobalSearchDTO globalSearchDTO)
         {
-            return await _httpService.SendPost<List<TblResumenHoras>>("api/TblResumenHoras", globalSearchDTO);
+            return await _httpService.Post<List<TblResumenHoras>>("api/TblResumenHoras", globalSearchDTO);
         }
     }
 }

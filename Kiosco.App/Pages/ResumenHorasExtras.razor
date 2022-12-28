@@ -8,6 +8,7 @@
 @inject ITblResumenHorasService ResumenHorasService;
 @inject ILocalStorageService localStorage;
 @inject NavigationManager NavigationManager;
+@inject IJSRuntime jsRunTime;
 
 <div class="card mt-1">
     <div class="card-body p-2 text-center">
@@ -79,13 +80,12 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">NUMBER</th>
-                <th scope="col">NAME</th>
-                <th scope="col">ROLE</th>
-                <th scope="col">GRADE</th>
-                <th scope="col">DEPARTMENT</th>
-                <th scope="col">SUBDEPARTMENT</th>
-                <th scope="col">WORKEDHOURS</th>
-                <th scope="col">VACATIONDAYS</th>
+                <th scope="col">HFTRAN</th>
+                <th scope="col">HNORM</th>
+                <th scope="col">HEXT35</th>
+                <th scope="col">HEXT100</th>
+                <th scope="col">HNOCT</th>
+                <th scope="col">HFER</th>
             </tr>
         </thead>
         <tbody>
@@ -94,15 +94,14 @@
                 @foreach (var item in ItemDTOs)
                 {
                     <tr>
-                        <td>@item.employeeId</td>
-                        <th>@item.employeeNumber</th>
-                        <th>@item.employeeName</th>
-                        <td>@item.role</td>
-                        <td>@item.grade</td>
-                        <td>@item.department</td>
-                        <td>@item.subDepartment</td>
-                        <td>@item.workedHours</td>
-                        <td>@item.vactionDays</td>
+                        <td>@item.idResumenHoras</td>
+                        <th>@item.HCODE</th>
+                        <td>@item.HFTRAN</td>
+                        <td>@item.HNORM</td>
+                        <td>@item.HEXT35</td>
+                        <td>@item.HEXT100</td>
+                        <td>@item.HNOCT</td>
+                        <td>@item.HFER</td>
                     </tr>
                 }
             }
@@ -166,17 +165,17 @@
         try
         {
 
-            payrollSummary = new(){
-                                Month = DateTime.Now.ToString("MMM"),
-                                Year = DateTime.Now.Year.ToString(),
-                                PayPeriod = "P2",
-                                BUCode = "3333",
-                                CostCenter = "5032"};
-
+            //payrollSummary = new(){
+            //                    Month = DateTime.Now.ToString("MMM"),
+            //                    Year = DateTime.Now.Year.ToString(),
+            //                    PayPeriod = "P2",
+            //                    BUCode = "3333",
+            //                    CostCenter = "5032"};
+            globalSearchDTO.DateFrom = DateTime.Now;
             await Search();
 
-            globalSearchDTO.DateFrom = DateTime.Now;
-            //WebResponseItemReportDTO = await InvoiceService.GenerateItemsReportBetweenDays(globalSearchDTO);
+
+            //ItemDTOs = await ResumenHorasService.GetByDb(globalSearchDTO);
             //if (WebResponseItemReportDTO != null)
             //{
             //    if (WebResponseItemReportDTO.statusCode == "200")
@@ -228,24 +227,22 @@
             //{
 
 
-            WebResponseItemDTO = await ResumenHorasService.Get(payrollSummary);
-            if (WebResponseItemDTO != null)
+            WebResponseItemDTO = await ResumenHorasService.GetByDb(globalSearchDTO);
+            if (WebResponseItemDTO is not null)
             {
-                if (WebResponseItemDTO is not null)
-                {
-                    string carnetCode = await localStorage.GetItem<string>("CarnetCode");
-                    ItemDTOs = WebResponseItemDTO.Where(w => w.employeeNumber == carnetCode).ToList();
-                    display = "d-none";
-                    message = "";
-                    alertClass = "";
+                string carnetCode = await localStorage.GetItem<string>("CarnetCode");
+                globalSearchDTO.CUSTOMER_ID = long.Parse(carnetCode);
+                ItemDTOs = WebResponseItemDTO;
 
-                }
-                else
-                {
-                    //Console.WriteLine("WebResponseItemReportDTO Status");
-                    //Console.WriteLine("Status Code : " + WebResponseItemDTO.statusCode);
-                    //Console.WriteLine("Message      : " + WebResponseItemDTO.message);
-                }
+                //if (ItemDTOs == null || ItemDTOs.Count == 0)
+                //{
+                //    await jsRunTime.InvokeVoidAsync("alertErrorForResumenHorasExtras");
+                //    NavigationManager.NavigateTo($"/home");
+                //}
+
+                display = "d-none";
+                message = "";
+                alertClass = "";
             }
             else
             {
@@ -279,10 +276,11 @@
         PlaceHolder = true;
         try
         {
+            globalSearchDTO.DateTo = globalSearchDTO.DateFrom;
             globalSearchDTO.DateFrom = globalSearchDTO.DateFrom.Value.AddDays(-Math.Abs(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) / 2));
-            payrollSummary.Month = globalSearchDTO.DateFrom.Value.ToString("MMM");
-            payrollSummary.Year = globalSearchDTO.DateFrom.Value.Year.ToString();
-            payrollSummary.PayPeriod = payrollSummary.PayPeriod == "P2" ? "P1" : "P2";
+            //payrollSummary.Month = globalSearchDTO.DateFrom.Value.ToString("MMM");
+            //payrollSummary.Year = globalSearchDTO.DateFrom.Value.Year.ToString();
+            //payrollSummary.PayPeriod = payrollSummary.PayPeriod == "P2" ? "P1" : "P2";
 
             await Search();
         }
@@ -307,10 +305,13 @@
         PlaceHolder = true;
         try
         {
-            globalSearchDTO.DateFrom = globalSearchDTO.DateFrom.Value.AddDays(-Math.Abs(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) / 2));
+            globalSearchDTO.DateFrom = globalSearchDTO.DateTo;
+            globalSearchDTO.DateTo = globalSearchDTO.DateFrom.Value.AddDays(Math.Abs(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) / 2));
+
+            //globalSearchDTO.DateFrom = globalSearchDTO.DateFrom.Value.AddDays(-Math.Abs(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) / 2));
             //payrollSummary.Month = globalSearchDTO.DateFrom.Value.Month.ToString();
-            payrollSummary.Year = globalSearchDTO.DateFrom.Value.Year.ToString();
-            payrollSummary.PayPeriod = payrollSummary.PayPeriod == "P2" ? "P1" : "P2";
+            //payrollSummary.Year = globalSearchDTO.DateFrom.Value.Year.ToString();
+            //payrollSummary.PayPeriod = payrollSummary.PayPeriod == "P2" ? "P1" : "P2";
             await Search();
         }
         catch (Exception ex)

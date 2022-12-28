@@ -32,6 +32,21 @@ namespace Kiosco.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("GetVacanteAplicar")]
+        public IActionResult GetVacanteAplicar()
+        {
+            var result = new WebResponse<IEnumerable<VacantesAplicar>>()
+            {
+                body = _kioscoDbContext.VacantesAplicar.ToList(),
+                isSuccess = true,
+                message = "Success",
+                statusCode = "200",
+            };
+
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddVacante(Vacantes vacantes)
         {
@@ -44,6 +59,40 @@ namespace Kiosco.Api.Controllers
                var result = new WebResponse<int>()
                {
                    body = _UnitOfWork.VacantesRepository.GetAll().Max(v => v.VacanteId),
+                   isSuccess = true,
+                   message = "Success",
+                   statusCode = "200", 
+               };
+
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                var result = new WebResponse<int>()
+                {
+                    body = -1,
+                    isSuccess = false,
+                    message = ex.Message,
+                };
+
+                return BadRequest(result);
+            }           
+        }
+
+        [HttpPost]
+        [Route("AddVacanteAplicar")]
+        public async Task<IActionResult> AddVacanteAplicar(VacantesAplicar vacantes)
+        {
+            try
+            {
+                _kioscoDbContext.VacantesAplicar.Add(vacantes);
+                //await _kioscoDbContext.VacantesRequisitos.AddRangeAsync(vacantes.VacanteRequisitos);
+                await _kioscoDbContext.SaveChangesAsync();
+
+               var result = new WebResponse<int>()
+               {
+                   body = 1,
                    isSuccess = true,
                    message = "Success",
                    statusCode = "200", 

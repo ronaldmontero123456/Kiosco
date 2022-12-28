@@ -7,6 +7,6 @@ namespace Kiosco.Infrastructure.Repositories
 {
     public class TblResumenHorasRepository : BaseRepository<DbContext, TblResumenHoras>, ITblResumenHorasRepository
     {
-        public TblResumenHorasRepository(KioscoContext context) : base(context) { }
+        public TblResumenHorasRepository(KioscoContextHCM context) : base(context) { }
     }
 }

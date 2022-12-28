@@ -36,7 +36,7 @@ namespace Kiosco.App.Data
         public string MARITAL_STATUS { get; set; }
         public string CURRENT_SALARY { get; set; }
         public string EFFECTIVE_START_DATE { get; set; }
-        public string EFFECTIVE_END_DATE { get; set; }
+        public string? EFFECTIVE_END_DATE { get; set; }
         public string EMPLOYEE_CATEGORY { get; set; }
         public string EMPLOYMENT_CATEGORY { get; set; }
         public string NORMAL_HOURS { get; set; }

@@ -49,9 +49,12 @@ namespace Kiosco.App.Services
                 //        password = "fusion2017@",
                 //    });
 
-                    var result = GetData<Promociones>(
+                //New Hire
+                //Promotions
+
+                var result = GetData<Promociones>(
                     new OraReportParams() {
-                        rptRoute = "/Custom/Human Capital Management/SysReports/DP Promotions Report.xdo",
+                        rptRoute = $"/Custom/Human Capital Management/SysReports/DP Promotions Report.xdo",
                         format = FILE_FORMAT.csv,
                         reportServiceEndPoint = "https://egby.fa.us6.oraclecloud.com/xmlpserver/services/v2/ReportService",
                         userName = "IImplementator",

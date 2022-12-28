@@ -1,8 +1,10 @@
 ﻿using DPWorldDR.Shared.Contracts;
 using DPWorldDR.Shared.Utilities;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Web.Mvc;
 
 namespace Kiosco.App.Utils
 {
@@ -132,19 +134,19 @@ namespace Kiosco.App.Utils
             }
 
 
-            string[] words0 = {"" ,"Uno ", "Dos ", "Tres ", "Cuatro ",
-                              "Cinco " ,"Seis ", "Siete ", "Ocho ", "Nueve "};
+            string[] words0 = {"" ,"uno ", "dos ", "tres ", "cuatro ",
+                              "cinco " ,"seis ", "siete ", "ocho ", "nueve "};
 
 
-            string[] words1 = {"Dies ", "Onces ", "Doce ", "Trece ", "Catorce ",
-                                "Quince ","Diez y Seis ","Diez y Siete","Diez y Ocho ", "Diez y Nueve "};
+            string[] words1 = {"dies ", "onces ", "doce ", "trece ", "catorce ",
+                                "quince ","diez y seis ","diez y siete","diez y ocho ", "diez y nueve "};
 
 
-            string[] words2 = {"Vente ", "Trenta ", "Cuarenta ", "Cincuenta ", "Sesenta ",
-                               "Setenta ","Ochenta ", "Noventa "};
+            string[] words2 = {"vente ", "trenta ", "cuarenta ", "cincuenta ", "sesenta ",
+                               "setenta ","ochenta ", "noventa "};
 
 
-            string[] words3 = { "Mil ", "Lakh ", "Crore " };
+            string[] words3 = { "mil ", "lakh ", "crore " };
 
 
             num[0] = number % 1000; // units
@@ -175,7 +177,7 @@ namespace Kiosco.App.Utils
                 t += -10 * h; // tens
 
 
-                if (h > 0) sb.Append(h == 1 ? "" : words0[h] + "Cientos ");
+                if (h > 0) sb.Append(h == 1 ? "" : words0[h] + "cientos ");
 
 
                 if (u > 0 || t > 0)
@@ -196,6 +198,14 @@ namespace Kiosco.App.Utils
 
             }
             return sb.ToString().TrimEnd();
+        }
+
+        public static MvcHtmlString PhotoBase64ImgSrc(string fileNameandPath)
+        {
+            var byteArray = File.ReadAllBytes(fileNameandPath);
+            var base64 = Convert.ToBase64String(byteArray);
+
+            return new MvcHtmlString(base64);
         }
 
     }

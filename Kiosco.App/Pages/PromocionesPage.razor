@@ -3,8 +3,22 @@
 @using Kiosco.App.Data
 @using Kiosco.App.Services
 @using System.Reflection
+@using Kiosco.App.Utils
 @inject IPromocionesService PromocionesService;
 @inject NavigationManager NavigationManager;
+@inject IConfiguration Configuration;
+
+@if (@Loading)
+{
+    <div id="loading">
+        <div class="loader">
+            <div class="inner one"></div>
+            <div class="inner two"></div>
+            <div class="inner three"></div>
+        </div>
+    </div>
+}
+
 
 <div class="card mt-1">
     <div class="card-body p-2 text-center">
@@ -18,44 +32,69 @@
 </div>
 
     <img src="css/imgs/image.png" Class="end-text" Style="width: 150px; height: 100px;" />
+        <RadzenDataList PageSize="18" WrapItems="true" AllowPaging="false" Data="@Promociones" TItem="Promociones">
+            <Template Context="order">
+                <RadzenCard Style="width: 350px;" Class="rz-border-radius-3">
+                    <div class="row">
+                        <div class="col-md-8 text-truncate">
+                            <RadzenBadge BadgeStyle="BadgeStyle.Light" Text=@($"{order.ACTION}") Class="me-1" IsPill="true" />
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", order.EFFECTIVE_START_DATE)}") IsPill="true" />
+                        </div>
+                    </div>
+                    <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
+                    <div class="d-flex flex-row align-items-center">
+                        <RadzenImage Path="@PhotoBase64ImgSrc(order.IMGEMPLEADOS)" Class="rz-border-radius-10 float-start m-5" Style="width: 150px; height: 150px;" />
+                        <div>
+                            <RadzenText TextStyle="TextStyle.Subtitle1" class="mb-0"><strong>@(order.FIRST_NAME) @(order.LAST_NAME?.Replace(@"""", ""))</strong></RadzenText>
+                            <RadzenText TextStyle="TextStyle.Subtitle1" class="mb-0">@(order.POSITION_NAME.Replace(@$"""", " "))</RadzenText>
+                                @*<RadzenText TextStyle="TextStyle.Body2" class="mb-0">@order.PERSON_NUMBER</RadzenText>*@
+                                <RadzenText TextStyle="TextStyle.Caption" class="mb-0">@(order.DEPARTMENT_NAME.Replace(@$"""", " ").Replace("D - ", ""))</RadzenText>
+                            </div>
+                        </div>
+                    </RadzenCard>
+                </Template>
+        </RadzenDataList>
 
-      <RadzenDataList PageSize="8" WrapItems="true" AllowPaging="true" Data="@Promociones" TItem="Promociones">
-                    <Template Context="order">
-              <RadzenCard Style="width: 350px;" Class="rz-border-radius-3">
-                  <div class="row">
-                      <div class="col-md-8 text-truncate">
-                          <RadzenBadge BadgeStyle="BadgeStyle.Light" Text=@($"{order.ACTION}") Class="me-1" IsPill="true" />
-                      </div>
-                      <div class="col-md-4 text-end">
-                          <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", order.EFFECTIVE_START_DATE)}") IsPill="true" />
-                      </div>
-                  </div>
-                  <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
-                  <div class="d-flex flex-row align-items-center">
-                      <RadzenImage Path="\\192.168.6.233\Security\Internal\2.GESTIÓNDEPERSONAL\1.FOTOS\1.EMPLEADOS\GATE\13-DARVINMORONFELIZ.jpg" Class="rz-border-radius-10 float-start me-3" Style="width: 80px; height: 80px;" />
-                      <div>
-                          <RadzenText TextStyle="TextStyle.Subtitle1" class="mb-0"><strong>@(order.FIRST_NAME) @(order.LAST_NAME)</strong></RadzenText>
-                          <RadzenText TextStyle="TextStyle.Subtitle1" class="mb-0">@(order.POSITION_NAME.Replace(@$""""," "))</RadzenText>
-                          @*<RadzenText TextStyle="TextStyle.Body2" class="mb-0">@order.PERSON_NUMBER</RadzenText>*@
-                          <RadzenText TextStyle="TextStyle.Caption" class="mb-0">@(order.DEPARTMENT_NAME.Replace(@$""""," ").Replace("D - ",""))</RadzenText>
-                      </div>
-                  </div>
-              </RadzenCard>
-          </Template>
-      </RadzenDataList>
       <div class="col-lg-2 p-3">
           <RadzenButton Text="VOLVER" Click="@(args => Volver())" class="bg bg-blue-cau" />
       </div>
 
-@code {
-    
-    public static List<Promociones> Promociones = new();
+    @code {
+
+    private bool Loading;
+    public static List<Promociones> Promociones;
 
     protected override async Task OnInitializedAsync()
     {
         try
-        {             
-            Promociones =(List<Promociones>)await PromocionesService.GetPromocionesAsync();
+        {         
+            //var ss = PhotoBase64ImgSrc("//192.168.6.233\\Security\\Internal\\2. GESTIÓN DE PERSONAL\\1. FOTOS\\1. EMPLEADOS\\IT\\1607-ESMELIN FORTUNATO.jpg");
+            //Promociones = (List<Promociones>)await PromocionesService.GetPromocionesAsync();
+            //string[] filedata = Directory.GetFiles(@"//192.168.6.233\Security\Internal\2. GESTIÓN DE PERSONAL\1. FOTOS\1. EMPLEADOS");
+
+            if(Promociones == null)
+            {
+                var files = Directory.GetFiles(@"\\192.168.6.233\Security\Internal\2. GESTIÓN DE PERSONAL\1. FOTOS\1. EMPLEADOS 2.0", "*.jpg", SearchOption.AllDirectories);
+
+                // Displaying the file name one by one
+                //foreach (string i in filedata)
+                //{
+                //    Console.WriteLine(i);
+                //}
+                Promociones = (List<Promociones>)await PromocionesService.GetPromocionesAsync();
+
+                foreach (var prom in Promociones)
+                {
+                    string imgpath = files.FirstOrDefault(f => f.Contains(prom.PERSON_NUMBER.Replace("CAU", "")));
+
+                    prom.IMGEMPLEADOS = string.IsNullOrEmpty(imgpath) ? "css/imgs/UserIconNotFound.png" : imgpath;
+
+                }
+            }
+            //StateHasChanged();
+            //IMGEMPLEADOS
 
         }
         catch (Exception ex)
@@ -65,9 +104,23 @@
             Console.WriteLine(ex.InnerException);
         }
     }
-    
+
     void Volver()
     {
+        Loading = true;
         NavigationManager.NavigateTo($"/Home");
+        Loading = false;
+    }
+
+
+    public string PhotoBase64ImgSrc(string fileNameandPath)
+    {
+        if (fileNameandPath.Contains("css/imgs"))
+            return fileNameandPath;
+
+        var byteArray = File.ReadAllBytes(fileNameandPath);
+        var base64 = Convert.ToBase64String(byteArray);
+
+        return "data:image/png;base64," + base64;
     }
 }

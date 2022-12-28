@@ -7,6 +7,7 @@ namespace Kiosco.App.Services
     {
         Task Add(List<DynamicForms> dynamicForms);
         Task<WebResponse<List<DynamicForms>>> Get();
+        Task<WebResponse<List<DynamicForms>>> GetByModule(GlobalSearchDTO Modulo);
     }
     public class DynamicFormsService : IDynamicFormsService
     {
@@ -23,6 +24,11 @@ namespace Kiosco.App.Services
         public async Task<WebResponse<List<DynamicForms>>> Get()
         {
             return await _httpService.Get<WebResponse<List<DynamicForms>>>("api/DynamicForms");
+        }
+
+        public async Task<WebResponse<List<DynamicForms>>> GetByModule(GlobalSearchDTO Modulo)
+        {
+            return await _httpService.Post<WebResponse<List<DynamicForms>>>("api/DynamicForms/GetDynamicFormsByName", Modulo);
         }
     }
 }

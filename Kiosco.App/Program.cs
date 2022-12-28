@@ -20,15 +20,23 @@ builder.Services.AddScoped(x =>
     return new HttpClient() { BaseAddress = apiUrl };
 });
 
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
+
+
 
 builder.Services.AddScoped<ITblResumenHorasService, TblResumenHorasService>()
    .AddScoped<IDynamicFormsService, DynamicFormsService>().AddScoped<IHttpService, HttpService>()
    .AddScoped<ILocalStorageService, LocalStorageService>().AddScoped<ICustomLogger, CustomLogger>()
-   .AddScoped<IOracleServices, OracleServices>().AddScoped<IPromocionesService, PromocionesService>()
+   .AddScoped<IOracleServices, OracleServices>()
+   .AddScoped<IPromocionesService, PromocionesService>()
+   .AddScoped<INuevosIngresosServices, NuevosIngresosServices>()
    .AddScoped<ILoginService, LoginService>()
    .AddScoped<IVolantesPagosService, VolantesPagosService>()
    .AddScoped<ICertificacionesLaboralesService, CertificacionesLaboralesService>()
    .AddScoped<IVacantesService, VacantesService>()
+   .AddScoped<ISendMailService, SendMailService>()
+   .AddScoped<IEncuestasInternasService, EncuestasInternasService>()
+   .AddScoped<IEmpleadosServices, EmpleadosServices>()
    .AddScoped<IVacantesRequisitosService, VacantesRequisitosService>();
 
  builder.Services.AddSingleton<ViewOptionService>();

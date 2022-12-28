@@ -4,6 +4,7 @@
 @using Kiosco.App.Services
 @using System.Reflection
 @using Kiosco.App.Utils
+@using System.Globalization
 @inject ICertificacionesLaboralesService _certificacionesLaboralesService;
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime jsRunTime;
@@ -32,42 +33,90 @@
 
 <div class="cert-lab">
 
-    <button type="button" class="btn btn-sm float-center end-text hideWhenPrint"  @onclick="print" title="Print">
+    <button type="button" class="btn btn-sm float-center end-text hideWhenPrint" @onclick="print" title="Print">
+        IMPRIMIR
         <i class="bi bi-printer-fill"></i>
     </button>
+
+@*    <div class="row">
+@*        <button type="button" class="btn btn-sm float-center end-text hideWhenPrint" @onclick="print" title="Print">
+            <i class="bi bi-printer-fill"></i>
+        </button>*@
+@*        <button type="button" class="btn btn-sm float-center end-text hideWhenPrint" @onclick="print" title="Print">
+            Certificacion Laboral  
+        </button>*@
+
+@*        <button type="button"  class="btn btn-sm float-center end-text hideWhenPrint" @onclick="print" title="Print">
+            Carta Consular
+        </button>*@
+    @*</div>*@
+    <div class="row" style="padding-top: 50px;">
+        @*<RadzenButton Text="Imprimir" Click="@(args => print())" class="bg bg-blue-cau float-center end-text hideWhenPrint" />*@
+        <RadzenButton Disabled="@CertificacionValidCard" Text="Certificacion Laboral" Style="padding-top:10px;" Click="@(args => {CertificacionValidCard = true; CartaValidCard = false;})" class="bg bg-blue-cau float-center end-text hideWhenPrint" />
+        <RadzenButton Disabled="@CartaValidCard" Text="Carta Consular" Style="padding-top:10px;" Click="@(args => {CertificacionValidCard = false; CartaValidCard = true;})" class="bg bg-blue-cau float-center end-text hideWhenPrint" />
+
+    </div>
+
     <div style="display:flex; justify-content:space-between">
         <img src="css/imgs/image.png" Style="width: 250px; height: 200px;" />
-        <h6 class="text-dark font-weight-bold " style="font-family: Times New Roman; font-style:italic; padding-top:100px;">dpworld.com</h6>
+        <p class="text-dark font-weight-bold " style="font-family: Times New Roman; font-style:italic; padding-top:100px;">dpworld.com</p>
     </div>
    
+    @if (CertificacionValidCard)
+    {
+        <h3 style="font-family: Times New Roman;  font-style:italic; padding-top: 130px">C E R T I F I C A C I Ó N</h3>
+    }
 
-    <h3 style="font-family: Times New Roman;  font-style:italic; padding-top: 130px">C E R T I F I C A C I Ó N</h3>
+    @if(certificacionesLaborales != null)
+    {
+        <div class="container" style="padding-left: 50px; padding-right: 50px;  padding-top: 130px">
 
-<div class="container" style="padding-left: 50px; padding-right: 50px;  padding-top: 130px">
-    <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
-    Hacemos constar que el señor <b class="text-dark font-weight-bold" style="font-weight:500">@FullName</b>, portadora de la cédula de identidad y 
-    electoral no. <b class="text-dark font-weight-bold" style="font-weight:500">@certificacionesLaborales.ADDRESS_LINE_1</b>, labora en esta empresa desde <b class="text-dark font-weight-bold" style="font-weight:500">@DateSinceWorked.Day de @DateSinceWorked.ToString("MMM") del año @DateSinceWorked.Year</b>
-    , desempeñándose en el cargo de <b class="text-dark font-weight-bold" style="font-weight:500">@certificacionesLaborales.N</b> en el departamento <b class="text-dark font-weight-bold" style="font-weight:500">@certificacionesLaborales.F</b>.	
-    </p>
-    <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
-         El señor <b class="text-dark font-weight-bold" style="font-weight:500">@FullName</b> devenga un salario anual de la suma de 
-        <b class="text-dark font-weight-bold" style="font-weight:500">RD$</b>($@(certificacionesLaborales.EMPLOYEE_Money.ToString("N2") +" " + stringnumtotext))
-        con beneficios incluidos.
-    </p>
+            @if (CartaValidCard)
+            {
+                <div class="col-md-6 p-3 hideWhenPrint">
+                    <RadzenCard>
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Sección Consular</RadzenText>
+                        <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                                Placeholder="Select..." Data=@Embajadas Change=@(args => OnChange(args, "DropDown with placeholder")) />
+                    </RadzenCard>
+                </div>
 
-    <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
-        Este documento ha sido emitido el día @(DateTime.Now.Day) de @(DateTime.Now.ToString("MMM")) de @(DateTime.Now.Year), municipio de Boca Chica, Santo Domingo.
-    </p>
-    
-	 	
-
-   <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic; padding-top: 100px">Radhyvelka Villalona</h6>
-    Supervisora de Bienestar y Servicios
+                <h4 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic; padding-top: 100px">Señores</h4>
+                <h4 style="font-family: Times New Roman; font-style:italic;">@("Embajada de " + EmbajadasValue)</h4>
+            }
 
 
-    <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic; padding-top: 130px">RNC: 1-01-76597-6</h6>
+            <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
+                Hacemos constar que @(certificacionesLaborales.EFFECTIVE_END_DATE.Contains("M") ? "el señor" : "la señora") <b class="text-dark font-weight-bold" style="font-weight:500">@FullName</b>, @(certificacionesLaborales.EFFECTIVE_END_DATE.Contains("M") ? "portador" : "portadora") de la cédula de identidad y
+                electoral no. <b class="text-dark font-weight-bold" style="font-weight:500">@certificacionesLaborales.ADDRESS_LINE_1</b>, labora en esta empresa desde <b class="text-dark font-weight-bold" style="font-weight:500">@DateSinceWorked.Day de @(new DateTime(@DateSinceWorked.Year, @DateSinceWorked.Month, @DateSinceWorked.Day).ToString("MMMM", CultureInfo.CreateSpecificCulture("es"))) del año @DateSinceWorked.Year</b>,
+                desempeñándose en el cargo de <b class="text-dark font-weight-bold" style="font-weight:500">@certificacionesLaborales.N.Replace(@"""", "")</b> en el departamento de <b class="text-dark font-weight-bold" style="font-weight:500">@(certificacionesLaborales.F.Contains("Operative") ? "Operations" : certificacionesLaborales.F)</b>.
+            </p>
+            <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
+                @(certificacionesLaborales.EFFECTIVE_END_DATE.Contains("M") ? "El señor" : "La señora") <b class="text-dark font-weight-bold" style="font-weight:500">@FullName</b> devenga un salario mensual de la suma de
+                <b class="text-dark font-weight-bold" style="font-weight:500">RD$ @(certificacionesLaborales.EMPLOYEE_Money.ToString("N2"))</b>  (@stringnumtotext).
+            </p>
 
-</div>
+            @if (CertificacionValidCard)
+            {
+                <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
+                    Este documento ha sido emitido el día @(DateTime.Now.Day) de @(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).ToString("MMMM", CultureInfo.CreateSpecificCulture("es"))) de @(DateTime.Now.Year), municipio de Boca Chica, Santo Domingo.
+                </p>
+            }else
+            {
+                <p style="text-align:justify; font-family: Times New Roman; font-style:italic">
+                    Con sentimiento de alta estima y consideración le saluda.
+                </p>
+            }
+
+            <h4 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic; padding-top: 100px">Radhyvelka Villalona</h4>
+            <h4 style="font-family: Times New Roman; font-style:italic;">Supervisora de Bienestar y Servicios</h4>
+
+
+            <h4 class="text-dark font-weight-bold" style=" font-family: Times New Roman; font-style:italic; padding-top: 130px">RNC: 1-01-76597-6</h4>
+
+        </div>
+    }
+
 
     <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic; padding-top: 320px">Edificio Administrativo</h6>
     <h6 class="text-dark font-weight-bold" style="font-family: Times New Roman; font-style:italic;">Suite 300</h6>
@@ -85,14 +134,65 @@
 @code {
 
     private bool Loading;
+    private bool CertificacionValidCard = true;
+    private bool CartaValidCard = false;
+    private string[] Embajadas;
+    private string EmbajadasValue;
     string FullName = "";
     DateTime DateSinceWorked;
-    CertificacionesLaborales certificacionesLaborales = new();
+    CertificacionesLaborales certificacionesLaborales;
     string stringnumtotext = "";
+    string embajadasload = "";
+
+
     protected async override void OnInitialized()
     {
         try
         {
+            //var datetoval = DateTime.Parse(DateTime.Now.ToString("MMMM"), CultureInfo.InvariantCulture);
+
+            Embajadas = @"Alemania - Santo Domingo
+                                Argentina - Santo Domingo
+                                Austria - Santo Domingo
+                                Belice - Santo Domingo
+                                Brasil - Santo Domingo
+                                Canadá - Santo Domingo
+                                Chile - Santo Domingo
+                                China - Santo Domingo
+                                Colombia - Santo Domingo
+                                Corea (República) - Santo Domingo
+                                Costa Rica - Santo Domingo
+                                Cuba - Santo Domingo
+                                Ecuador - Santo Domingo
+                                El Salvador - Santo Domingo
+                                España - Santo Domingo
+                                Estados Unidos - Santo Domingo
+                                Francia - Santo Domingo
+                                Guatemala - Santo Domingo
+                                Haití - Santo Domingo
+                                Honduras - Santo Domingo
+                                India - Santo Domingo
+                                Israel - Santo Domingo
+                                Italia - Santo Domingo
+                                Jamaica - Santo Domingo
+                                Japón - Santo Domingo
+                                Marruecos - Santo Domingo
+                                México - Santo Domingo
+                                Nicaragua - Santo Domingo
+                                Países Bajos - Santo Domingo
+                                Panamá - Santo Domingo
+                                Paraguay - Santo Domingo
+                                Perú - Santo Domingo
+                                Qatar - Santo Domingo
+                                Reino Unido - Santo Domingo
+                                Santa Sede - Santo Domingo
+                                Suiza - Santo Domingo
+                                Turquía - Santo Domingo
+                                Uruguay - Santo Domingo
+                                Venezuela - Santo Domingo".Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+
+
             Loading = true;        
             certificacionesLaborales = await _certificacionesLaboralesService.GetCertificacionesLaboralesAsync();
             DateSinceWorked = DateTime.Parse(certificacionesLaborales.NATIONAL_IDENTIFIER_TYPE);
@@ -109,13 +209,31 @@
         StateHasChanged();
     }
 
-    private void print()
+    private async Task print()
     {
-        jsRunTime.InvokeVoidAsync("Print");
+        if (CartaValidCard && string.IsNullOrEmpty(EmbajadasValue))
+        {
+            await jsRunTime.InvokeVoidAsync("alertErrorForCartas");
+            return;
+        }
+
+        await jsRunTime.InvokeVoidAsync("Print"); 
+        bool formvalidate = false;
+        if (await jsRunTime.InvokeAsync<bool>("alertForValidLogout", formvalidate))
+        {
+            NavigationManager.NavigateTo($"/#");
+        }
     }
     
     void Volver()
     {
         NavigationManager.NavigateTo($"/Home");
     }
+
+    void OnChange(object value, string name)
+    {
+        EmbajadasValue = value.ToString().Trim();
+
+    }
+
 }

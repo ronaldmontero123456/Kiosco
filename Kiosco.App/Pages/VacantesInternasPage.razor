@@ -1,9 +1,26 @@
 ﻿@page "/VacantesInternas"
+@using DPWCMSApp.Services;
 @using Kiosco.App.Data
 @using Kiosco.App.Services
 @inject IVacantesService VacantesService
+@inject ISendMailService SendMailService
+@inject IJSRuntime jsRunTime;
+@inject NavigationManager NavigationManager;
+@inject ILocalStorageService _LocalStorageService;
 
 @inject NavigationManager NavigationManager;
+
+@if (@Loading)
+{
+    <div id="loading">
+        <div class="loader">
+            <div class="inner one"></div>
+            <div class="inner two"></div>
+            <div class="inner three"></div>
+        </div>
+    </div>
+}
+
 
 <div class="card mt-1">
     <div class="card-body p-2 text-center">
@@ -16,48 +33,58 @@
     </div>
 </div>
 
+<img src="css/imgs/image.png" Class="end-text" Style="width: 150px; height: 100px;" />
 
-<div class="container">
-    <div class="row py-2">
-        <div class="col">
-            <RadzenCard>
-                <RadzenDataList WrapItems="true" AllowPaging="true" Data="@VacantesList" TItem="Vacantes" PageSize="4" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
-                    <Template Context="product">
-                        <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
-                            <div class="container">
-                                <div class="row" style="margin-left: calc(var(--bs-gutter-x) * -1); margin-right: calc(var(--bs-gutter-x) * -1)">
-                                    <div class="col-lg-3 p-3 product-title">
-                                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-secondary">@(product.Title)</RadzenText>
-                                    </div>
-                                    <div class="col-lg-7 p-3">
-                                        <div class="row d-flex">
-                                            <div class="col-md-6 order-first order-lg-last col-lg-3 text-sm-start text-lg-end mb-3 mb-lg-0">
-                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Id</RadzenText>
-                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.VacanteId)</RadzenText>
-                                            </div>
-                                            <div class="col-md-6  order-first order-lg-last col-lg-3 text-sm-start text-lg-end mb-3 mb-lg-0">
-                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Titulo</RadzenText>
-                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.Title)</RadzenText>
-                                            </div>
-                                            <div class="col-md-6 order-first order-lg-last col-lg-3 text-sm-start text-lg-end mb-3 mb-lg-0">
-                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Descripcion</RadzenText>
-                                                <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(product.Descripcion)</RadzenText>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2 p-3">
-                                        <RadzenButton Text="Aplicar" Click=@(args => Aplicar()) class="bg bg-blue-cau" />
-                                    </div>
-                                </div>
-                            </div>
-                        </RadzenCard>
-                    </Template>
-                </RadzenDataList>
+    <div style="overflow: scroll;">
+        <table class="table table-sm table-hover table-bordered mt-1">
+            <thead class="bg-blue-cau text-center">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">TITULO</th>
+                    <th scope="col">DESCRIPCION</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (VacantesList.Any())
+            {
+                @foreach (var item in VacantesList)
+                {
+                    <tr>
+                        <td>@item.VacanteId</td>
+                        <th>@item.Title</th>
+                        <td>@item.Descripcion</td>
+                        <td><RadzenButton Text="APLICAR" Click="@(args => Aplicar(@item.VacanteId, @item.Title))" class="bg bg-blue-cau" /></td>
+                    </tr>
+                }
+            }
+            @*            @if (!itemdtos.any() && placeholder == false)
+            {
+            <tr>
+            <th colspan="14">no hay resultados que mostrar</th>
+            </tr>
+            }*@
 
-            </RadzenCard>
-        </div>
-    </div>
+            @*            @if (placeholder)
+            {
+            <tr>
+            <th colspan="14">
+            <p class="placeholder-glow">
+            <span class="placeholder col-12"></span>
+            <span class="placeholder col-12 bg-secondary"></span>
+            <span class="placeholder col-12"></span>
+            <span class="placeholder col-12 bg-secondary"></span>
+            </p>
+            </th>
+            </tr>
+            }*@
+        </tbody>
+    </table>
 </div>
+
+    <div class="col-lg-2 p-3">
+        <RadzenButton Text="VOLVER" Click="@(args => Volver())" class="bg bg-blue-cau" />
+    </div>
 
 <style>
 .product-title {
@@ -74,19 +101,62 @@
 
 @code {
 
-
+    private bool Loading;
     static List<Vacantes> VacantesList = new();
 
     protected override async void OnInitialized()
     {
+        Loading = true;
         var result = await VacantesService.GetVacantesAsync();
-        VacantesList = result.body.ToList();
-        base.OnInitialized();
+        VacantesList = result.body.Where(r => r.FechaFin >= DateTime.Now).ToList();
+        Loading = false;
+        StateHasChanged();
     }
 
 
-    void Aplicar()
+    void Volver()
     {
-        NavigationManager.NavigateTo($"/VacantesInternas/VacantesAplicar");
+        NavigationManager.NavigateTo($"/Home");
+    }
+
+
+    async Task Aplicar(int vacanteId, string Title)
+    {
+        try
+        {
+            var result = await VacantesService.GetVacantesAplicarAsync();
+            if (result.body.Any(r => r.VacanteId == vacanteId))
+            {
+                await jsRunTime.InvokeVoidAsync("alertForVacantesInternasAdding");
+                return;
+            }
+            Loading = true;
+            string carnetId = await _LocalStorageService.GetItem<string>("CarnetCode");
+            string CarnetMame = await _LocalStorageService.GetItem<string>("CarnetMame");
+
+            VacantesAplicar vacantesAplicar = new VacantesAplicar()
+            {
+                EmpId = carnetId,
+                VacanteId = vacanteId,
+                EmpName = CarnetMame,
+            };
+
+            await VacantesService.AddVacantesAsync(vacantesAplicar);
+
+            await SendMailService.SendEmail($"Aprobar la aplicación de vacantes internas:",
+             Title, carnetId,
+            $"http://192.168.6.227:8089/SignatureSuperPage/{vacanteId}");
+            Loading = false;
+            await jsRunTime.InvokeVoidAsync("alertForVacantesInternas");
+            bool formvalidate = false;
+            if (await jsRunTime.InvokeAsync<bool>("alertForValidLogout", formvalidate))
+            {
+                NavigationManager.NavigateTo($"/#");
+            }
+        }catch(Exception ex)
+        {
+            await jsRunTime.InvokeVoidAsync("alertErrorForVacantesInternas");
+        }
+
     }
 }

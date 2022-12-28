@@ -10,11 +10,9 @@ namespace Kiosco.App.Data
         public string PersonNumber { get; set; }
 
 
-
         [JsonProperty("PERSON_NUMBER")]
         [Display(Name = "PERSON_NUMBER")]
         public string PersonNumber2 { get; set; }
-
 
 
         [JsonProperty("EFFECTIVE_START_DATE")]
